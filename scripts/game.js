@@ -1,7 +1,4 @@
-window.onload = function(){
-    game = new Game();
-    let test = game.loadGame();
-}
+
 
 let map = {
     width : 30,
@@ -60,6 +57,9 @@ class Game{
         this.cnt = 0;
         this.pointerPos;
 
+        this.titleScreen = new PIXI.Container();
+        this.menuScreen = new PIXI.Container();
+        this.endScreen = new PIXI.Container();
 
         this.templELKeyDown = function(e){that.keysDown(e)};
         this.templELKeyUp = function(e){that.keysUp(e)};
@@ -75,12 +75,12 @@ class Game{
         this.pressedKeys[e.keyCode] = false;
     }
 
-    loadGame(){
+    loadGraphics(){
         var that = this;
         this.app = new PIXI.Application(
             {
-                width: map.width * map.tileSize,
-                height: map.width * map.tileSize,
+                width: 600,
+                height: 600,
                 backgroundColor: "0xAAAAAA",
             }
         );
@@ -96,9 +96,33 @@ class Game{
                        .add("background","field.png")
                        .add("wall","wall.png")
                        .add("enemy","enemy_new.png")
+                       .add("titlescreen", "titlescreen.png")
+                       .add("playBtn","play-button.png")
                        .add("tiles","mapTiles.png");
-        this.app.loader.onComplete.add(function(){that.createTextureSheets()});
+        this.app.loader.onComplete.add(function(){that.creatingCombinedGraphics()})
         this.app.loader.load();
+    }
+
+    creatingCombinedGraphics(){
+        this.createScreens();
+        this.createTextureSheets();
+    }
+
+    createScreens(){
+        var background = new PIXI.Sprite(this.app.loader.resources["titlescreen"].texture);
+        background.anchor.set(0.5);
+        background.x = 300;
+        background.y = 300;
+        this.titleScreen.addChild(background);
+        var button = new PIXI.Sprite(this.app.loader.resources["playBtn"].texture);
+        button.anchor.set(0.5);
+        button.x = 300;
+        button.y = 300;
+        button.interactive = true;
+        button.buttonMode = true;
+        button.on("pointerup",()=>{this.titleScreen.visible = false; this.inizialiseGane()})
+        this.titleScreen.addChild(button);
+        this.app.stage.addChild(this.titleScreen);
     }
 
     createTextureSheets(){
@@ -134,8 +158,6 @@ class Game{
             new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 0 * height, width, height)),
             new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 1 * height, width, height))
         ];
-
-        this.inizialiseGane();
     }
 
     inizialiseGane(){
@@ -159,6 +181,8 @@ class Game{
         this.app.stage.addChild(this.gameMap);
 
 
+
+
         for(var i = 0; i < 1; i++){
             this.enemies.push(new Enemie(500,100 + 200 * i,this.enemyTextureSheet,"level1",this.gameMap, (object1,object2) => {return this.isColiding(object1,object2);}));
             this.app.stage.addChild(this.enemies[i]);
@@ -169,7 +193,7 @@ class Game{
         this.player = new Player(300,300,this.app.loader.resources["player"].texture,(object1,object2) => {return this.isColiding(object1,object2);});
         this.app.stage.addChild(this.player);
 
-        this.app.ticker.add(function(){that.gameLoop()});
+        this.app.ticker.add(()=>{that.gameLoop()});
     }
     
     isColiding(object1,object2){
