@@ -7,8 +7,9 @@ class Graph{
 
 
 class Enemie extends PIXI.AnimatedSprite{
-    constructor(posX,posY,texture,type,collisionFkt){
-        super(texture.standDown)
+    constructor(posX,posY,textureSheet,type,map,collisionFkt){
+        super(textureSheet.standDown)
+        this.textureSheet = textureSheet;
         this.anchor.set(0.5)
         this.animationSpeed = 0.5;
         this.loop = false;
@@ -18,60 +19,63 @@ class Enemie extends PIXI.AnimatedSprite{
         this.speed = this.type == "level1" ? 2 : 1;
         this.colFkt = collisionFkt;
         this.hitBox = "rectangular";
+        this.map = map;
         this.mapGraph = new Graph;
+        this.createMapGraph()
         this.currentPath = [];
         this.cnt = 0;
-        this.cnt2 = 0;
         this.direction = 0;
         this.play();
     }
 
-    update(player,map){
+    updateEnemy(player){
         if(this.cnt % 9 == 0){
             this.cnt = 0;
-            this.createMapGraph(map);
             this.findDirection(player);
             this.direction = this.currentPath[this.cnt] - this.currentPath[this.cnt + 1];
         }
         this.cnt++;
-
         var i = 0;
         if(this.direction == 1){
             this.x -= this.speed;
-            for(i = 0; i < map.children.length; i++){
-                if(map.children[i].isSolid){
-                    if(this.colFkt(this,map.children[i])){
-                        this.x = map.children[i].x + 21;
+            this.playWalkAnimation("up");
+            for(i = 0; i < this.map.children.length; i++){
+                if(this.map.children[i].isSolid){
+                    if(this.colFkt(this,this.map.children[i])){
+                        this.x = this.map.children[i].x + 21;
                     }
                 }
             }
         }
         else if(this.direction == -1){
             this.x += this.speed;
-            for(i = 0; i < map.children.length; i++){
-                if(map.children[i].isSolid){
-                    if(this.colFkt(this,map.children[i])){
-                        this.x = map.children[i].x - 21;
+            this.playWalkAnimation("down");
+            for(i = 0; i < this.map.children.length; i++){
+                if(this.map.children[i].isSolid){
+                    if(this.colFkt(this,this.map.children[i])){
+                        this.x = this.map.children[i].x - 21;
                     }
                 }
             }
         }
         else if(this.direction == 30){
             this.y -= this.speed;
-            for(i = 0; i < map.children.length; i++){
-                if(map.children[i].isSolid){
-                    if(this.colFkt(this,map.children[i])){
-                        this.y = map.children[i].y + 21;
+            this.playWalkAnimation("left");
+            for(i = 0; i < this.map.children.length; i++){
+                if(this.map.children[i].isSolid){
+                    if(this.colFkt(this,this.map.children[i])){
+                        this.y = this.map.children[i].y + 21;
                     }
                 }
             }
         }
         else if(this.direction == -30){
             this.y += this.speed;
-            for(i = 0; i < map.children.length; i++){
-                if(map.children[i].isSolid){
-                    if(this.colFkt(this,map.children[i])){
-                        this.y = map.children[i].y - 21;
+            this.playWalkAnimation("right");
+            for(i = 0; i < this.map.children.length; i++){
+                if(this.map.children[i].isSolid){
+                    if(this.colFkt(this,this.map.children[i])){
+                        this.y = this.map.children[i].y - 21;
                     }
                 }
             }
@@ -83,15 +87,15 @@ class Enemie extends PIXI.AnimatedSprite{
         
     }
 
-    createMapGraph(map){
-        this.mapGraph.vertexes = map.children;
-        for(var i = 0; i < map.children.length; i++){
+    createMapGraph(){
+        this.mapGraph.vertexes = this.map.children;
+        for(var i = 0; i < this.map.children.length; i++){
             let adjIndex = [];
             if(!(i-1 < 0 || i-1 > 900))adjIndex.push(i-1);
             if(!(i+1 < 0 || i+1 > 900))adjIndex.push(i+1);
             if(!(i-30 < 0 || i-30 > 900))adjIndex.push(i-30);
             if(!(i+30 < 0 || i+30  > 900))adjIndex.push(i+30);
-            
+
             this.mapGraph.edges[i] = adjIndex;
         }
     }
@@ -175,5 +179,30 @@ class Enemie extends PIXI.AnimatedSprite{
         path.reverse();
         return path;
 
+    }
+
+    playWalkAnimation(direction){
+        if(!this.playing){
+            if(direction == "up"){
+                this.textures = this.textureSheet.walkUp;
+                this.loop = false;
+                this.play();
+            }
+            else if(direction == "down"){
+                this.textures = this.textureSheet.walkDown;
+                this.loop = false;
+                this.play();
+            }
+            else if(direction == "right"){
+                this.textures = this.textureSheet.walkRight;
+                this.loop = false;
+                this.play();
+            }
+            else if(direction == "left"){
+                this.textures = this.textureSheet.walkLeft;
+                this.loop = false;
+                this.play();
+            }
+        }
     }
 }
