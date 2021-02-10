@@ -168,7 +168,21 @@ class Game{
         this.menuScreen.zIndex = 998;
         this.menuScreen.visible = false;
         this.app.stage.addChild(this.menuScreen);
-        
+
+        var ESbutton = new PIXI.Sprite(this.app.loader.resources["extBtn"].texture);
+        ESbutton.anchor.set(0.5);
+        ESbutton.x = 300;
+        ESbutton.y = 300;
+        ESbutton.interactive = true;
+        ESbutton.buttonMode = true;
+        ESbutton.on("pointerup", ()=>{this.endScreen.visible = false;
+                                      this.gameMap.visible = false;
+                                      this.titleScreen.visible = true;
+                                      this.cleanupGame()})
+        this.endScreen.addChild(ESbutton);
+        this.endScreen.zIndex = 999;
+        this.endScreen.visible = false;
+        this.app.stage.addChild(this.endScreen); 
     }
 
     createTextureSheets(){
@@ -282,11 +296,11 @@ class Game{
 
     pauseGame(condition){
         this.app.ticker.stop();
-        if(condition = "pause"){
+        if(condition == "pause"){
             this.menuScreen.visible = true;
         }
-        else if(condition = "gameover"){
-
+        else if(condition == "gameover"){
+            this.endScreen.visible = true;
         }
     }
 
@@ -324,6 +338,7 @@ class Game{
         for(var i = 0; i < this.enemies.length; i++){
             if(this.enemies[i].updateEnemy(this.player)){
                 console.log("YOU DIED")
+                this.pauseGame("gameover");
             }
         }
         
