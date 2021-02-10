@@ -20,6 +20,7 @@ class Enemie extends PIXI.AnimatedSprite{
         this.colFkt = collisionFkt;
         this.hitBox = "rectangular";
         this.map = map;
+        this.zIndex = 3;
         this.mapGraph = new Graph;
         this.createMapGraph()
         this.currentPath = [];

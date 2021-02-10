@@ -7,6 +7,7 @@ class Bullet extends PIXI.Sprite{
         this.pivot.set(5,5);
         this.x = posX;
         this.y = posY;
+        this.zIndex = 2;
         this.speed = 15;
         this.clsFkt = collisionFkt;
         this.rotation = Math.PI + angle;

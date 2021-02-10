@@ -4,6 +4,7 @@ class Player extends PIXI.Sprite{
         this.anchor.set(0.5)
         this.x = posX;
         this.y = posY;
+        this.zIndex = 4;
         this.speed = 5
         this.colFkt = collisionFkt;
         this.hitBox = "rectangular";

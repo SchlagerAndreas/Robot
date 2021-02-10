@@ -38,6 +38,19 @@ let map = {
     ]
 }
 
+/*
+zIndexes:
+TitleScreen: 1000
+EndScreen: 999
+MenuScreen: 998
+
+
+Player: 4
+Enemies: 3
+Bullets: 2
+GameMap: 1
+*/
+
 class Game{
     constructor(){
         var that = this;
@@ -56,6 +69,8 @@ class Game{
         this.pointerdown = false;
         this.cnt = 0;
         this.pointerPos;
+
+        this.tickerFun = ()=>{this.gameLoop()};
 
         this.titleScreen = new PIXI.Container();
         this.menuScreen = new PIXI.Container();
@@ -86,6 +101,7 @@ class Game{
         );
         document.querySelector("#gameDiv").appendChild(this.app.view);
         this.app.stage.interactive = true;
+        this.app.stage.sortableChildren = true;
         this.app.stage.on("pointerdown", function(e){that.pointerdown = true;
                                                      that.pointerPos = e.data.global;});
         this.app.stage.on("pointerup", function(){that.pointerdown = false;});
@@ -98,6 +114,7 @@ class Game{
                        .add("enemy","enemy_new.png")
                        .add("titlescreen", "titlescreen.png")
                        .add("playBtn","play-button.png")
+                       .add("extBtn","exit-button.png")
                        .add("tiles","mapTiles.png");
         this.app.loader.onComplete.add(function(){that.creatingCombinedGraphics()})
         this.app.loader.load();
@@ -114,15 +131,44 @@ class Game{
         background.x = 300;
         background.y = 300;
         this.titleScreen.addChild(background);
-        var button = new PIXI.Sprite(this.app.loader.resources["playBtn"].texture);
-        button.anchor.set(0.5);
-        button.x = 300;
-        button.y = 300;
-        button.interactive = true;
-        button.buttonMode = true;
-        button.on("pointerup",()=>{this.titleScreen.visible = false; this.inizialiseGane()})
-        this.titleScreen.addChild(button);
+        var TSbutton = new PIXI.Sprite(this.app.loader.resources["playBtn"].texture);
+        TSbutton.anchor.set(0.5);
+        TSbutton.x = 300;
+        TSbutton.y = 300;
+        TSbutton.interactive = true;
+        TSbutton.buttonMode = true;
+        TSbutton.on("pointerup",()=>{this.titleScreen.visible = false; 
+                                     this.inizialiseGane()})
+        this.titleScreen.addChild(TSbutton);
+        this.titleScreen.zIndex = 1000;
         this.app.stage.addChild(this.titleScreen);
+
+        var MSbuttonExt = new PIXI.Sprite(this.app.loader.resources["extBtn"].texture);
+        MSbuttonExt.anchor.set(0.5);
+        MSbuttonExt.x = 150;
+        MSbuttonExt.y = 300;
+        MSbuttonExt.interactive = true;
+        MSbuttonExt.buttonMode = true;
+        MSbuttonExt.on("pointerup",()=>{
+                                        this.menuScreen.visible = false;
+                                        this.gameMap.visible = false;
+                                        this.titleScreen.visible = true;  
+                                        this.cleanupGame()})
+
+        var MSbuttonPlay = new PIXI.Sprite(this.app.loader.resources["playBtn"].texture);
+        MSbuttonPlay.anchor.set(0.5);
+        MSbuttonPlay.x = 450;
+        MSbuttonPlay.y = 300;
+        MSbuttonPlay.interactive = true;
+        MSbuttonPlay.buttonMode = true;
+        MSbuttonPlay.on("pointerup",()=>{this.menuScreen.visible = false; 
+                                         this.app.ticker.start()})
+        this.menuScreen.addChild(MSbuttonExt);
+        this.menuScreen.addChild(MSbuttonPlay);
+        this.menuScreen.zIndex = 998;
+        this.menuScreen.visible = false;
+        this.app.stage.addChild(this.menuScreen);
+        
     }
 
     createTextureSheets(){
@@ -178,6 +224,8 @@ class Game{
                 this.gameMap.addChild(tileSprite);
             }
         }
+        this.gameMap.visible = true;
+        this.gameMap.zIndex = 1;
         this.app.stage.addChild(this.gameMap);
 
 
@@ -193,7 +241,10 @@ class Game{
         this.player = new Player(300,300,this.app.loader.resources["player"].texture,(object1,object2) => {return this.isColiding(object1,object2);});
         this.app.stage.addChild(this.player);
 
-        this.app.ticker.add(()=>{that.gameLoop()});
+
+        
+
+        this.app.ticker.add(this.tickerFun);
     }
     
     isColiding(object1,object2){
@@ -210,7 +261,40 @@ class Game{
         }
     }
 
+    cleanupGame(){
+        var i = 0;
+        for(i = 0; i < this.enemies.length; i++){
+            this.enemies[i].destroy();
+        }
+        for(i = 0; i < this.bullets.length; i++){
+            this.bullets[i].destroy();
+        }
+        for(i = 0; i < this.gameMap.children.length; i++){
+            this.gameMap.children[i].destroy();
+        }
+        this.enemies = [];
+        this.bullets = [];
+        this.gameMap = new PIXI.Container();
+        this.player.destroy();
+        this.app.ticker.remove(this.tickerFun);
+        this.app.ticker.start()
+    }
+
+    pauseGame(condition){
+        this.app.ticker.stop();
+        if(condition = "pause"){
+            this.menuScreen.visible = true;
+        }
+        else if(condition = "gameover"){
+
+        }
+    }
+
     gameLoop(){
+        if(this.pressedKeys["27"]){
+            this.pauseGame("pause");
+        }
+
         this.player.move(this.pressedKeys,this.gameMap);
        
         if(this.pointerdown && this.amonition > 0 && this.cnt % 3 == 0 && !this.isReloading){
