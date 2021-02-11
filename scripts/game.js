@@ -54,27 +54,30 @@ GameMap: 1
 class Game{
     constructor(){
         var that = this;
+        //Controll Variables
         this.pressedKeys = {};
-        this.playerSpeed = 5;
-        this.enemies = [];
-        this.app;
-        this.player;
-        this.background;
-        this.bullets = [];
-        this.gameMap = new PIXI.Container();
-        this.enemyTextureSheet = {};
+        this.pointerdown = false;
+        this.pointerPos;
+        //Shoot/Reload mechanics variables
         this.isReloading = false;
         this.reloadingTime;
         this.amonition = 100;
-        this.pointerdown = false;
-        this.cnt = 0;
-        this.pointerPos;
-
-        this.tickerFun = ()=>{this.gameLoop()};
-
+        //Screens
         this.titleScreen = new PIXI.Container();
         this.menuScreen = new PIXI.Container();
         this.endScreen = new PIXI.Container();
+        //Game Objects
+        this.app;
+        this.level;
+        this.gameMap = new PIXI.Container();
+        this.enemies = [];
+        this.enemyTextureSheet = {};
+        this.bullets = [];
+        this.player;
+       
+        this.cnt = 0;
+        
+        this.tickerFun = ()=>{this.gameLoop()};
 
         this.templELKeyDown = function(e){that.keysDown(e)};
         this.templELKeyUp = function(e){that.keysUp(e)};
@@ -88,6 +91,25 @@ class Game{
     
     keysUp(e){
         this.pressedKeys[e.keyCode] = false;
+    }
+
+    loadLevel(levelnumber){
+        this.fetchLevel().then(data => this.level = data[levelnumber]);
+
+    }
+
+    error(){
+
+    }
+
+    async fetchLevel(){
+        let data = await fetch("scripts/levels.json")
+        if (data.ok){
+            return await data.json()
+        }
+        else{
+            throw new Error(data.status)
+        }
     }
 
     loadGraphics(){
@@ -107,7 +129,7 @@ class Game{
         this.app.stage.on("pointerup", function(){that.pointerdown = false;});
 
         this.app.loader.baseUrl = "graphics";
-        this.app.loader.add("player","player.png")
+        this.app.loader.add("player","new_player.png")
                        .add("bullet","bullet.png")
                        .add("background","field.png")
                        .add("wall","wall.png")
@@ -252,7 +274,7 @@ class Game{
         
 
 
-        this.player = new Player(300,300,this.app.loader.resources["player"].texture,(object1,object2) => {return this.isColiding(object1,object2);});
+        this.player = new Player(300,300,new PIXI.Texture(this.app.loader.resources["player"].texture, new PIXI.Rectangle(40,20,20,20)),(object1,object2) => {return this.isColiding(object1,object2);});
         this.app.stage.addChild(this.player);
 
 
