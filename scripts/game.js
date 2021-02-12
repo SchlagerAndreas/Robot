@@ -1,43 +1,3 @@
-
-
-let map = {
-    width : 30,
-    height : 30,
-    tileSize: 20,
-    tiles : [
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,
-        0,2,2,2,2,2,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,
-        0,2,2,2,2,2,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,
-        0,2,2,2,2,2,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,
-        0,2,2,2,2,2,0,0,0,2,2,2,2,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,2,0,
-        0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,2,2,2,2,2,0,
-        0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,
-        0,2,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,
-        0,2,2,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,0,
-        0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,2,2,2,2,2,2,0,
-        0,2,2,2,2,2,2,1,2,2,2,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,
-        0,2,2,2,2,2,2,2,2,2,2,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,
-        0,2,2,2,2,2,2,2,2,2,2,0,0,2,2,2,2,2,2,2,0,0,0,2,2,2,2,2,2,0,
-        0,2,2,2,2,2,2,2,2,2,2,0,0,2,2,2,2,2,2,2,0,0,0,2,2,2,2,2,2,0,
-        0,2,2,2,2,2,2,2,2,2,2,0,0,2,2,2,2,2,2,2,0,0,0,2,2,2,2,2,2,0,
-        0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,
-        0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,
-        0,2,2,2,2,2,2,2,1,2,2,2,2,2,1,2,2,2,2,2,2,2,2,2,1,2,2,2,2,0,
-        0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,
-        0,2,2,2,2,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,
-        0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,
-        0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,
-        0,2,2,2,2,2,2,0,0,0,2,2,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,2,2,0,
-        0,2,2,2,2,2,2,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,
-        0,2,2,2,2,2,2,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,
-        0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,
-        0,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,
-        0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    ]
-}
-
 /*
 zIndexes:
 TitleScreen: 1000
@@ -67,6 +27,7 @@ class Game{
         this.titleScreen = new PIXI.Container();
         this.menuScreen = new PIXI.Container();
         this.endScreen = new PIXI.Container();
+        this.levelSelectScreen = new PIXI.Container();
         //Game Objects
         this.app;
         this.level;
@@ -79,7 +40,7 @@ class Game{
         this.cnt = 0;
         
         this.tickerFun = ()=>{this.gameLoop()};
-        this.levelSelectScreen = new PIXI.Container();
+        
 
         this.templELKeyDown = function(e){that.keysDown(e)};
         this.templELKeyUp = function(e){that.keysUp(e)};
@@ -269,8 +230,10 @@ class Game{
         ];
     }
 
-    inizialiseGane(level){
-        var that = this;
+    async inizialiseGane(level){
+        let tmp = await this.fetchLevel();
+        this.level = tmp[level-1];
+
         var i = 0;
         var backgroundTextures = [];
         for(i = 0; i < 10; i++){
@@ -278,12 +241,12 @@ class Game{
             let y = Math.floor (i / 5);
             backgroundTextures[i] = new PIXI.Texture(
                                     this.app.loader.resources["tiles"].texture,
-                                    new PIXI.Rectangle(x*map.tileSize,y*map.tileSize,map.tileSize,map.tileSize));
+                                    new PIXI.Rectangle(x*this.level.map.tileSize,y*this.level.map.tileSize,this.level.map.tileSize,this.level.map.tileSize));
         }
-        for(let y = 0; y < map.width; y++){
-            for(let x = 0; x < map.width; x++){
-                let tile =  map.tiles[y * map.width + x];
-                let tileSprite = new MapObject(x * map.tileSize + 10,y * map.tileSize + 10, backgroundTextures[tile], (tile == 0 ? true : false));
+        for(let y = 0; y < this.level.map.width; y++){
+            for(let x = 0; x < this.level.map.width; x++){
+                let tile =  this.level.map.tiles[y * this.level.map.width + x];
+                let tileSprite = new MapObject(x * this.level.map.tileSize + 10,y * this.level.map.tileSize + 10, backgroundTextures[tile], (tile == 0 ? true : false));
                 this.gameMap.addChild(tileSprite);
             }
         }
