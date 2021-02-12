@@ -43,6 +43,7 @@ zIndexes:
 TitleScreen: 1000
 EndScreen: 999
 MenuScreen: 998
+LevelSelectScreen: 997
 
 
 Player: 4
@@ -78,6 +79,7 @@ class Game{
         this.cnt = 0;
         
         this.tickerFun = ()=>{this.gameLoop()};
+        this.levelSelectScreen = new PIXI.Container();
 
         this.templELKeyDown = function(e){that.keysDown(e)};
         this.templELKeyUp = function(e){that.keysUp(e)};
@@ -135,8 +137,9 @@ class Game{
                        .add("wall","wall.png")
                        .add("enemy","enemy_new.png")
                        .add("titlescreen", "titlescreen.png")
-                       .add("playBtn","play-button.png")
-                       .add("extBtn","exit-button.png")
+                       .add("playBtn","buttons/play-button.png")
+                       .add("extBtn","buttons/exit-button.png")
+                       .add("levelBtns","buttons/level-select-buttons.png")
                        .add("tiles","mapTiles.png");
         this.app.loader.onComplete.add(function(){that.creatingCombinedGraphics()})
         this.app.loader.load();
@@ -159,8 +162,8 @@ class Game{
         TSbutton.y = 300;
         TSbutton.interactive = true;
         TSbutton.buttonMode = true;
-        TSbutton.on("pointerup",()=>{this.titleScreen.visible = false; 
-                                     this.inizialiseGane()})
+        TSbutton.on("pointerup",()=>{this.titleScreen.visible = false;
+                                     this.levelSelectScreen.visible = true;})
         this.titleScreen.addChild(TSbutton);
         this.titleScreen.zIndex = 1000;
         this.app.stage.addChild(this.titleScreen);
@@ -204,7 +207,31 @@ class Game{
         this.endScreen.addChild(ESbutton);
         this.endScreen.zIndex = 999;
         this.endScreen.visible = false;
-        this.app.stage.addChild(this.endScreen); 
+        this.app.stage.addChild(this.endScreen);
+
+        for(var i = 0; i < 9; i++){
+            let level = i + 1; //i starts by 0 levels by 1
+            let LSbutton = new PIXI.Sprite(new PIXI.Texture(this.app.loader.resources["levelBtns"].texture, new PIXI.Rectangle((i%3)*100,Math.floor(i/3)*100,100,100)));
+            LSbutton.anchor.set(0.5);
+            LSbutton.x = 125 + (i % 3) * 175;
+            LSbutton.y = 230 + Math.floor(i / 3) * 140;
+            LSbutton.interactive = true;
+            LSbutton.buttonMode = true;
+            LSbutton.on("pointerup", () => {this.levelSelectScreen.visible = false; 
+                                            this.inizialiseGane(level)})
+            this.levelSelectScreen.addChild(LSbutton);
+        }
+        let text = new PIXI.Text('Level Select',{fontFamily : 'Arial', fontSize: 24, fill : 0x0a0a0a, align : 'center'});
+        text.height = 100;
+        text.width = 450;
+        text.resolution = 100;
+        text.anchor.set(0.5);
+        text.x = 300;
+        text.y = 90;
+        this.levelSelectScreen.addChild(text);
+        this.levelSelectScreen.zIndex = 997;
+        this.levelSelectScreen.visible = false;
+        this.app.stage.addChild(this.levelSelectScreen)
     }
 
     createTextureSheets(){
@@ -242,7 +269,7 @@ class Game{
         ];
     }
 
-    inizialiseGane(){
+    inizialiseGane(level){
         var that = this;
         var i = 0;
         var backgroundTextures = [];
