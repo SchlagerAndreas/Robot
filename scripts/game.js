@@ -1,9 +1,11 @@
 /*
 zIndexes:
 TitleScreen: 1000
-EndScreen: 999
-MenuScreen: 998
-LevelSelectScreen: 997
+HelpScreen 999
+EndScreen: 998
+MenuScreen: 997
+LevelSelectScreen: 996
+
 
 
 Player: 4
@@ -27,6 +29,7 @@ class Game{
         this.titleScreen = new PIXI.Container();
         this.menuScreen = new PIXI.Container();
         this.endScreen = new PIXI.Container();
+        this.helpScreen = new PIXI.Container();
         this.levelSelectScreen = new PIXI.Container();
         //Game Objects
         this.app;
@@ -101,6 +104,13 @@ class Game{
                        .add("playBtn","buttons/play-button.png")
                        .add("extBtn","buttons/exit-button.png")
                        .add("levelBtns","buttons/level-select-buttons.png")
+                       .add("helpBtn", "buttons/help-button.png")
+                       .add("backBtn", "buttons/back-button.png")
+                       .add("contrWASD","buttons/WASD-Controls.png")
+                       .add("contrR","buttons/R-Controls.png")
+                       .add("contrMouseMove","buttons/mouseMove-Controls.png")
+                       .add("contrMouseLClick","buttons/mouseLeftClick-Controls.png")
+                       .add("contrEsc","buttons/Esc-Controls.png")
                        .add("tiles","mapTiles.png");
         this.app.loader.onComplete.add(function(){that.creatingCombinedGraphics()})
         this.app.loader.load();
@@ -112,87 +122,217 @@ class Game{
     }
 
     createScreens(){
-        var background = new PIXI.Sprite(this.app.loader.resources["titlescreen"].texture);
-        background.anchor.set(0.5);
-        background.x = 300;
-        background.y = 300;
-        this.titleScreen.addChild(background);
-        var TSbutton = new PIXI.Sprite(this.app.loader.resources["playBtn"].texture);
-        TSbutton.anchor.set(0.5);
-        TSbutton.x = 300;
-        TSbutton.y = 300;
-        TSbutton.interactive = true;
-        TSbutton.buttonMode = true;
-        TSbutton.on("pointerup",()=>{this.titleScreen.visible = false;
-                                     this.levelSelectScreen.visible = true;})
-        this.titleScreen.addChild(TSbutton);
-        this.titleScreen.zIndex = 1000;
-        this.app.stage.addChild(this.titleScreen);
-
-        var MSbuttonExt = new PIXI.Sprite(this.app.loader.resources["extBtn"].texture);
-        MSbuttonExt.anchor.set(0.5);
-        MSbuttonExt.x = 150;
-        MSbuttonExt.y = 300;
-        MSbuttonExt.interactive = true;
-        MSbuttonExt.buttonMode = true;
-        MSbuttonExt.on("pointerup",()=>{
-                                        this.menuScreen.visible = false;
-                                        this.gameMap.visible = false;
-                                        this.titleScreen.visible = true;  
-                                        this.cleanupGame()})
-
-        var MSbuttonPlay = new PIXI.Sprite(this.app.loader.resources["playBtn"].texture);
-        MSbuttonPlay.anchor.set(0.5);
-        MSbuttonPlay.x = 450;
-        MSbuttonPlay.y = 300;
-        MSbuttonPlay.interactive = true;
-        MSbuttonPlay.buttonMode = true;
-        MSbuttonPlay.on("pointerup",()=>{this.menuScreen.visible = false; 
-                                         this.app.ticker.start()})
-        this.menuScreen.addChild(MSbuttonExt);
-        this.menuScreen.addChild(MSbuttonPlay);
-        this.menuScreen.zIndex = 998;
-        this.menuScreen.visible = false;
-        this.app.stage.addChild(this.menuScreen);
-
-        var ESbutton = new PIXI.Sprite(this.app.loader.resources["extBtn"].texture);
-        ESbutton.anchor.set(0.5);
-        ESbutton.x = 300;
-        ESbutton.y = 300;
-        ESbutton.interactive = true;
-        ESbutton.buttonMode = true;
-        ESbutton.on("pointerup", ()=>{this.endScreen.visible = false;
-                                      this.gameMap.visible = false;
-                                      this.titleScreen.visible = true;
-                                      this.cleanupGame()})
-        this.endScreen.addChild(ESbutton);
-        this.endScreen.zIndex = 999;
-        this.endScreen.visible = false;
-        this.app.stage.addChild(this.endScreen);
-
-        for(var i = 0; i < 9; i++){
-            let level = i + 1; //i starts by 0 levels by 1
-            let LSbutton = new PIXI.Sprite(new PIXI.Texture(this.app.loader.resources["levelBtns"].texture, new PIXI.Rectangle((i%3)*100,Math.floor(i/3)*100,100,100)));
-            LSbutton.anchor.set(0.5);
-            LSbutton.x = 125 + (i % 3) * 175;
-            LSbutton.y = 230 + Math.floor(i / 3) * 140;
-            LSbutton.interactive = true;
-            LSbutton.buttonMode = true;
-            LSbutton.on("pointerup", () => {this.levelSelectScreen.visible = false; 
-                                            this.inizialiseGane(level)})
-            this.levelSelectScreen.addChild(LSbutton);
+        //Title Screen
+        {
+            let background = new PIXI.Sprite(this.app.loader.resources["titlescreen"].texture);
+            background.anchor.set(0.5);
+            background.x = 300;
+            background.y = 300;
+            this.titleScreen.addChild(background);
+            let button = new PIXI.Sprite(this.app.loader.resources["playBtn"].texture);
+            button.anchor.set(0.5);
+            button.x = 300;
+            button.y = 200;
+            button.interactive = true;
+            button.buttonMode = true;
+            button.on("pointerup",()=>{this.titleScreen.visible = false;
+                                       this.levelSelectScreen.visible = true;})
+            this.titleScreen.addChild(button);
+            button = new PIXI.Sprite(this.app.loader.resources["helpBtn"].texture);
+            button.anchor.set(0.5);
+            button.x = 300;
+            button.y = 400;
+            button.interactive = true;
+            button.buttonMode = true;
+            button.on("pointerup",()=>{this.titleScreen.visible = false;
+                                       this.helpScreen.lastScreen = "titleScreen";
+                                       this.helpScreen.visible = true;})
+            this.titleScreen.addChild(button);
+            this.titleScreen.zIndex = 1000;
+            this.app.stage.addChild(this.titleScreen);
         }
-        let text = new PIXI.Text('Level Select',{fontFamily : 'Arial', fontSize: 24, fill : 0x0a0a0a, align : 'center'});
-        text.height = 100;
-        text.width = 450;
-        text.resolution = 100;
-        text.anchor.set(0.5);
-        text.x = 300;
-        text.y = 90;
-        this.levelSelectScreen.addChild(text);
-        this.levelSelectScreen.zIndex = 997;
-        this.levelSelectScreen.visible = false;
-        this.app.stage.addChild(this.levelSelectScreen)
+        //Pause Screen
+        {
+            let text = new PIXI.Text('Pause',{fontFamily : 'Arial', fontSize: 24, fill : 0x0a0a0a, align : 'center'});
+            text.height = 100;
+            text.width = 200;
+            text.resolution = 100;
+            text.anchor.set(0.5);
+            text.x = 300;
+            text.y = 90;
+            this.menuScreen.addChild(text);            
+            
+            let button = new PIXI.Sprite(this.app.loader.resources["playBtn"].texture);
+            button.anchor.set(0.5);
+            button.x = 300;
+            button.y = 230;
+            button.interactive = true;
+            button.buttonMode = true;
+            button.on("pointerup",()=>{this.menuScreen.visible = false; 
+                                       this.app.ticker.add(this.tickerFun);})
+            this.menuScreen.addChild(button);
+
+            button = new PIXI.Sprite(this.app.loader.resources["helpBtn"].texture);
+            button.anchor.set(0.5);
+            button.x = 300;
+            button.y = 370;
+            button.interactive = true;
+            button.buttonMode = true;
+            button.on("pointerup",()=>{this.helpScreen.lastScreen = "pauseScreen";
+                                       this.menuScreen.visible = false;
+                                       this.helpScreen.visible = true;})
+            this.menuScreen.addChild(button);
+
+            button = new PIXI.Sprite(this.app.loader.resources["extBtn"].texture);
+            button.anchor.set(0.5);
+            button.x = 300;
+            button.y = 510;
+            button.interactive = true;
+            button.buttonMode = true;
+            button.on("pointerup",()=>{
+                                            this.menuScreen.visible = false;
+                                            this.gameMap.visible = false;
+                                            this.titleScreen.visible = true;  
+                                            this.cleanupGame()})
+            this.menuScreen.addChild(button);
+
+            this.menuScreen.zIndex = 997;
+            this.menuScreen.visible = false;
+            this.app.stage.addChild(this.menuScreen);
+        }
+        //Help Screen
+        {
+            let button = new PIXI.Sprite(this.app.loader.resources["backBtn"].texture);
+            button.anchor.set(0);
+            button.x = 75;
+            button.y = 80;
+            button.interactive = true;
+            button.buttonMode = true;
+            button.on("pointerup",()=>{this.helpScreen.visible = false; 
+                                       if(this.helpScreen.lastScreen == "pauseScreen"){this.menuScreen.visible = true;}
+                                       else{this.titleScreen.visible = true}})
+            this.helpScreen.addChild(button);
+            let text = new PIXI.Text('Controls:',{fontFamily : 'Arial', fontSize: 24, fill : 0x0a0a0a, align : 'center'});
+            text.height = 100;
+            text.width = 200;
+            text.resolution = 100;
+            text.anchor.set(0);
+            text.x = 325;
+            text.y = 80;
+            this.helpScreen.addChild(text); 
+            let image = new PIXI.Sprite(this.app.loader.resources["contrWASD"].texture);
+            image.anchor.set(0);
+            image.x = 75;
+            image.y = 208;
+            this.helpScreen.addChild(image);
+            text = new PIXI.Text('Move',{fontFamily : 'Arial', fontSize: 24, fill : 0x0a0a0a, align : 'center'});
+            text.height = 40;
+            text.width = 200;
+            text.resolution = 100;
+            text.anchor.set(0);
+            text.x = 325;
+            text.y = 208;
+            this.helpScreen.addChild(text);
+            image = new PIXI.Sprite(this.app.loader.resources["contrR"].texture);
+            image.anchor.set(0);
+            image.x = 75;
+            image.y = 276;
+            this.helpScreen.addChild(image);
+            text = new PIXI.Text('Reload',{fontFamily : 'Arial', fontSize: 24, fill : 0x0a0a0a, align : 'center'});
+            text.height = 40;
+            text.width = 200;
+            text.resolution = 100;
+            text.anchor.set(0);
+            text.x = 325;
+            text.y = 276;
+            this.helpScreen.addChild(text);
+            image = new PIXI.Sprite(this.app.loader.resources["contrMouseMove"].texture);
+            image.anchor.set(0);
+            image.x = 75;
+            image.y = 344;
+            this.helpScreen.addChild(image);
+            text = new PIXI.Text('Aim',{fontFamily : 'Arial', fontSize: 24, fill : 0x0a0a0a, align : 'center'});
+            text.height = 40;
+            text.width = 200;
+            text.resolution = 100;
+            text.anchor.set(0);
+            text.x = 325;
+            text.y = 344;
+            this.helpScreen.addChild(text);
+            image = new PIXI.Sprite(this.app.loader.resources["contrMouseLClick"].texture);
+            image.anchor.set(0);
+            image.x = 75;
+            image.y = 412;
+            this.helpScreen.addChild(image);
+            text = new PIXI.Text('Shoot',{fontFamily : 'Arial', fontSize: 24, fill : 0x0a0a0a, align : 'center'});
+            text.height = 40;
+            text.width = 200;
+            text.resolution = 100;
+            text.anchor.set(0);
+            text.x = 325;
+            text.y = 412;
+            this.helpScreen.addChild(text);
+            image = new PIXI.Sprite(this.app.loader.resources["contrEsc"].texture);
+            image.anchor.set(0);
+            image.x = 75;
+            image.y = 480;
+            this.helpScreen.addChild(image);
+            text = new PIXI.Text('Pause Game',{fontFamily : 'Arial', fontSize: 24, fill : 0x0a0a0a, align : 'center'});
+            text.height = 40;
+            text.width = 200;
+            text.resolution = 100;
+            text.anchor.set(0);
+            text.x = 325;
+            text.y = 480;
+            this.helpScreen.addChild(text);
+            this.helpScreen.zIndex = 999;
+            this.helpScreen.visible = false;
+            this.helpScreen.lastScreen = "titleScreen";
+            this.app.stage.addChild(this.helpScreen)
+        }
+        //Game Over Screen
+        {
+            let button = new PIXI.Sprite(this.app.loader.resources["extBtn"].texture);
+            button.anchor.set(0.5);
+            button.x = 300;
+            button.y = 300;
+            button.interactive = true;
+            button.buttonMode = true;
+            button.on("pointerup", ()=>{this.endScreen.visible = false;
+                                        this.gameMap.visible = false;
+                                        this.titleScreen.visible = true;
+                                        this.cleanupGame()})
+            this.endScreen.addChild(button);
+            this.endScreen.zIndex = 998;
+            this.endScreen.visible = false;
+            this.app.stage.addChild(this.endScreen);
+        }
+        //Level Select Screen
+        {
+            for(var i = 0; i < 9; i++){
+                let level = i + 1; //i starts by 0 levels by 1
+                let LSbutton = new PIXI.Sprite(new PIXI.Texture(this.app.loader.resources["levelBtns"].texture, new PIXI.Rectangle((i%3)*100,Math.floor(i/3)*100,100,100)));
+                LSbutton.anchor.set(0.5);
+                LSbutton.x = 125 + (i % 3) * 175;
+                LSbutton.y = 230 + Math.floor(i / 3) * 140;
+                LSbutton.interactive = true;
+                LSbutton.buttonMode = true;
+                LSbutton.on("pointerup", () => {this.levelSelectScreen.visible = false; 
+                                                this.inizialiseGane(level)})
+                this.levelSelectScreen.addChild(LSbutton);
+            }
+            let text = new PIXI.Text('Level Select',{fontFamily : 'Arial', fontSize: 24, fill : 0x0a0a0a, align : 'center'});
+            text.height = 100;
+            text.width = 450;
+            text.resolution = 100;
+            text.anchor.set(0.5);
+            text.x = 300;
+            text.y = 90;
+            this.levelSelectScreen.addChild(text);
+            this.levelSelectScreen.zIndex = 996;
+            this.levelSelectScreen.visible = false;
+            this.app.stage.addChild(this.levelSelectScreen)
+        } 
     }
 
     createTextureSheets(){
@@ -307,7 +447,7 @@ class Game{
     }
 
     pauseGame(condition){
-        this.app.ticker.stop();
+        this.app.ticker.remove(this.tickerFun);
         if(condition == "pause"){
             this.menuScreen.visible = true;
         }
@@ -354,7 +494,7 @@ class Game{
         }
         
         document.getElementById("nextWave").innerHTML = "Enemies in " + Math.round(((300 - (this.cnt % 300)) / 100));
-        if(this.cnt % 300 == 0){
+        if(this.cnt % 300 == 0 && this.cnt != 0){
             for(var i = 0; i < this.level.enemyCount; i++){
                 this.enemies.push(new Enemie(this.level.enemySpawnLocation[i].x,this.level.enemySpawnLocation[i].y,this.enemyTextureSheet,"level1",this.gameMap,(object1,object2) => {return this.isColiding(object1,object2);}));
                 this.app.stage.addChild(this.enemies[this.enemies.length - 1]);
