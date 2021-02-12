@@ -257,14 +257,14 @@ class Game{
 
 
 
-        for(var i = 0; i < 1; i++){
-            this.enemies.push(new Enemie(500,100 + 200 * i,this.enemyTextureSheet,"level1",this.gameMap, (object1,object2) => {return this.isColiding(object1,object2);}));
+        for(var i = 0; i < this.level.enemyCount; i++){
+            this.enemies.push(new Enemie(this.level.enemySpawnLocation[i].x,this.level.enemySpawnLocation[i].y,this.enemyTextureSheet,"level1",this.gameMap, (object1,object2) => {return this.isColiding(object1,object2);}));
             this.app.stage.addChild(this.enemies[i]);
         }
         
 
 
-        this.player = new Player(300,300,new PIXI.Texture(this.app.loader.resources["player"].texture, new PIXI.Rectangle(40,20,20,20)),(object1,object2) => {return this.isColiding(object1,object2);});
+        this.player = new Player(this.level.playerSpawnLocation.x,this.level.playerSpawnLocation.y,new PIXI.Texture(this.app.loader.resources["player"].texture, new PIXI.Rectangle(40,20,20,20)),(object1,object2) => {return this.isColiding(object1,object2);});
         this.app.stage.addChild(this.player);
 
 
@@ -349,15 +349,14 @@ class Game{
         
         for(var i = 0; i < this.enemies.length; i++){
             if(this.enemies[i].updateEnemy(this.player)){
-                console.log("YOU DIED")
                 this.pauseGame("gameover");
             }
         }
         
         document.getElementById("nextWave").innerHTML = "Enemies in " + Math.round(((300 - (this.cnt % 300)) / 100));
         if(this.cnt % 300 == 0){
-            for(var i = 0; i < 3; i++){
-                this.enemies.push(new Enemie(500,100 + 200 * i,this.enemyTextureSheet,"level1",this.gameMap,(object1,object2) => {return this.isColiding(object1,object2);}));
+            for(var i = 0; i < this.level.enemyCount; i++){
+                this.enemies.push(new Enemie(this.level.enemySpawnLocation[i].x,this.level.enemySpawnLocation[i].y,this.enemyTextureSheet,"level1",this.gameMap,(object1,object2) => {return this.isColiding(object1,object2);}));
                 this.app.stage.addChild(this.enemies[this.enemies.length - 1]);
             }
         }
