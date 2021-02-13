@@ -209,89 +209,90 @@ class Game{
         }
         //Help Screen
         {
+            let text = new PIXI.Text('Controls:',{fontFamily : 'Arial', fontSize: 24, fill : 0x0a0a0a, align : 'center'});
+            text.height = 100;
+            text.width = 200;
+            text.resolution = 100;
+            text.anchor.set(0);
+            text.x = 200;
+            text.y = 60;
+            this.helpScreen.addChild(text); 
+            let image = new PIXI.Sprite(this.app.loader.resources["contrWASD"].texture);
+            image.anchor.set(0);
+            image.x = 60;
+            image.y = 210;
+            this.helpScreen.addChild(image);
+            text = new PIXI.Text('Move',{fontFamily : 'Arial', fontSize: 24, fill : 0x0a0a0a, align : 'center'});
+            text.height = 40;
+            text.width = 80;
+            text.resolution = 100;
+            text.anchor.set(0);
+            text.x = 160;
+            text.y = 210;
+            this.helpScreen.addChild(text);
+            image = new PIXI.Sprite(this.app.loader.resources["contrR"].texture);
+            image.anchor.set(0);
+            image.x = 60;
+            image.y = 270;
+            this.helpScreen.addChild(image);
+            text = new PIXI.Text('Reload',{fontFamily : 'Arial', fontSize: 24, fill : 0x0a0a0a, align : 'center'});
+            text.height = 40;
+            text.width = 80;
+            text.resolution = 100;
+            text.anchor.set(0);
+            text.x = 160;
+            text.y = 270;
+            this.helpScreen.addChild(text);
+            image = new PIXI.Sprite(this.app.loader.resources["contrEsc"].texture);
+            image.anchor.set(0);
+            image.x = 60;
+            image.y = 330;
+            this.helpScreen.addChild(image);
+            text = new PIXI.Text('Pause',{fontFamily : 'Arial', fontSize: 24, fill : 0x0a0a0a, align : 'center'});
+            text.height = 40;
+            text.width = 80;
+            text.resolution = 100;
+            text.anchor.set(0);
+            text.x = 160;
+            text.y = 330;
+            this.helpScreen.addChild(text);
+
+            image = new PIXI.Sprite(this.app.loader.resources["contrMouseMove"].texture);
+            image.anchor.set(0);
+            image.x = 380;
+            image.y = 210;
+            this.helpScreen.addChild(image);
+            text = new PIXI.Text('Aim',{fontFamily : 'Arial', fontSize: 24, fill : 0x0a0a0a, align : 'center'});
+            text.height = 40;
+            text.width = 80;
+            text.resolution = 100;
+            text.anchor.set(0);
+            text.x = 480;
+            text.y = 210;
+            this.helpScreen.addChild(text);
+            image = new PIXI.Sprite(this.app.loader.resources["contrMouseLClick"].texture);
+            image.anchor.set(0);
+            image.x = 380;
+            image.y = 270;
+            this.helpScreen.addChild(image);
+            text = new PIXI.Text('Shoot',{fontFamily : 'Arial', fontSize: 24, fill : 0x0a0a0a, align : 'center'});
+            text.height = 40;
+            text.width = 80;
+            text.resolution = 100;
+            text.anchor.set(0);
+            text.x = 480;
+            text.y = 270;
+            this.helpScreen.addChild(text);
             let button = new PIXI.Sprite(this.app.loader.resources["backBtn"].texture);
             button.anchor.set(0);
-            button.x = 75;
-            button.y = 80;
+            button.x = 200;
+            button.y = 440;
             button.interactive = true;
             button.buttonMode = true;
             button.on("pointerup",()=>{this.helpScreen.visible = false; 
                                        if(this.helpScreen.lastScreen == "pauseScreen"){this.menuScreen.visible = true;}
                                        else{this.titleScreen.visible = true}})
             this.helpScreen.addChild(button);
-            let text = new PIXI.Text('Controls:',{fontFamily : 'Arial', fontSize: 24, fill : 0x0a0a0a, align : 'center'});
-            text.height = 100;
-            text.width = 200;
-            text.resolution = 100;
-            text.anchor.set(0);
-            text.x = 325;
-            text.y = 80;
-            this.helpScreen.addChild(text); 
-            let image = new PIXI.Sprite(this.app.loader.resources["contrWASD"].texture);
-            image.anchor.set(0);
-            image.x = 75;
-            image.y = 208;
-            this.helpScreen.addChild(image);
-            text = new PIXI.Text('Move',{fontFamily : 'Arial', fontSize: 24, fill : 0x0a0a0a, align : 'center'});
-            text.height = 40;
-            text.width = 200;
-            text.resolution = 100;
-            text.anchor.set(0);
-            text.x = 325;
-            text.y = 208;
-            this.helpScreen.addChild(text);
-            image = new PIXI.Sprite(this.app.loader.resources["contrR"].texture);
-            image.anchor.set(0);
-            image.x = 75;
-            image.y = 276;
-            this.helpScreen.addChild(image);
-            text = new PIXI.Text('Reload',{fontFamily : 'Arial', fontSize: 24, fill : 0x0a0a0a, align : 'center'});
-            text.height = 40;
-            text.width = 200;
-            text.resolution = 100;
-            text.anchor.set(0);
-            text.x = 325;
-            text.y = 276;
-            this.helpScreen.addChild(text);
-            image = new PIXI.Sprite(this.app.loader.resources["contrMouseMove"].texture);
-            image.anchor.set(0);
-            image.x = 75;
-            image.y = 344;
-            this.helpScreen.addChild(image);
-            text = new PIXI.Text('Aim',{fontFamily : 'Arial', fontSize: 24, fill : 0x0a0a0a, align : 'center'});
-            text.height = 40;
-            text.width = 200;
-            text.resolution = 100;
-            text.anchor.set(0);
-            text.x = 325;
-            text.y = 344;
-            this.helpScreen.addChild(text);
-            image = new PIXI.Sprite(this.app.loader.resources["contrMouseLClick"].texture);
-            image.anchor.set(0);
-            image.x = 75;
-            image.y = 412;
-            this.helpScreen.addChild(image);
-            text = new PIXI.Text('Shoot',{fontFamily : 'Arial', fontSize: 24, fill : 0x0a0a0a, align : 'center'});
-            text.height = 40;
-            text.width = 200;
-            text.resolution = 100;
-            text.anchor.set(0);
-            text.x = 325;
-            text.y = 412;
-            this.helpScreen.addChild(text);
-            image = new PIXI.Sprite(this.app.loader.resources["contrEsc"].texture);
-            image.anchor.set(0);
-            image.x = 75;
-            image.y = 480;
-            this.helpScreen.addChild(image);
-            text = new PIXI.Text('Pause Game',{fontFamily : 'Arial', fontSize: 24, fill : 0x0a0a0a, align : 'center'});
-            text.height = 40;
-            text.width = 200;
-            text.resolution = 100;
-            text.anchor.set(0);
-            text.x = 325;
-            text.y = 480;
-            this.helpScreen.addChild(text);
             this.helpScreen.zIndex = 999;
             this.helpScreen.visible = false;
             this.helpScreen.lastScreen = "titleScreen";
@@ -426,10 +427,10 @@ class Game{
             let width = 200;
             let height = 50;
             this.progressBarFrames = [
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0*width,3*height,width,height)),
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0*width,2*height,width,height)),
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0*width,0*height,width,height)),
                 new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0*width,1*height,width,height)),
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0*width,0*height,width,height))
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0*width,2*height,width,height)),
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0*width,3*height,width,height))
             ]
         }
     }
@@ -532,7 +533,7 @@ class Game{
 
         this.player.move(this.pressedKeys,this.gameMap);
        
-        if(this.pointerdown && this.amonition > 0 && this.cnt % 3 == 0 && !this.isReloading){
+        if(this.pointerdown && this.amonition > 0 && this.cnt % 10 == 0 && !this.isReloading){
             this.shoot();
         }
 
@@ -561,10 +562,7 @@ class Game{
                 this.pauseGame("gameover");
             }
         }
-        
-        if(this.cnt % 100 == 0){
-            this.UI.children[4].texture = this.progressBarFrames[Math.round(((300 - (this.cnt % 300)) / 100))];
-        }
+        this.UI.children[4].texture = this.progressBarFrames[Math.round(((300 - (this.cnt % 300)) / 100))];
         if(this.cnt % 300 == 0 && this.cnt != 0){
             for(var i = 0; i < this.level.enemyCount; i++){
                 this.enemies.push(new Enemie(this.level.enemySpawnLocation[i].x,this.level.enemySpawnLocation[i].y,this.enemyTextureSheet,"level1",this.gameMap,(object1,object2) => {return this.isColiding(object1,object2);}));
