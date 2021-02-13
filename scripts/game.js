@@ -6,7 +6,7 @@ EndScreen: 998
 MenuScreen: 997
 LevelSelectScreen: 996
 
-
+UI: 100
 
 Player: 4
 Enemies: 3
@@ -34,12 +34,15 @@ class Game{
         //Game Objects
         this.app;
         this.level;
+        this.UI = new PIXI.Container();
         this.gameMap = new PIXI.Container();
         this.enemies = [];
-        this.enemyTextureSheet = {};
         this.bullets = [];
         this.player;
-       
+        //texture Sheets
+        this.progressBarFrames = [];
+        this.enemyTextureSheet = {};
+
         this.cnt = 0;
         
         this.tickerFun = ()=>{this.gameLoop()};
@@ -83,8 +86,8 @@ class Game{
         this.app = new PIXI.Application(
             {
                 width: 600,
-                height: 600,
-                backgroundColor: "0xAAAAAA",
+                height: 650,
+                transparent: true,
             }
         );
         document.querySelector("#gameDiv").appendChild(this.app.view);
@@ -93,6 +96,8 @@ class Game{
         this.app.stage.on("pointerdown", function(e){that.pointerdown = true;
                                                      that.pointerPos = e.data.global;});
         this.app.stage.on("pointerup", function(){that.pointerdown = false;});
+
+        PIXI.settings.SCALE_MODE.NEAREST;
 
         this.app.loader.baseUrl = "graphics";
         this.app.loader.add("player","new_player.png")
@@ -111,6 +116,8 @@ class Game{
                        .add("contrMouseMove","buttons/mouseMove-Controls.png")
                        .add("contrMouseLClick","buttons/mouseLeftClick-Controls.png")
                        .add("contrEsc","buttons/Esc-Controls.png")
+                       .add("progrBarNextWave","nextWaveBar.png")
+                       .add("weapon","weapon.png")
                        .add("tiles","mapTiles.png");
         this.app.loader.onComplete.add(function(){that.creatingCombinedGraphics()})
         this.app.loader.load();
@@ -333,41 +340,98 @@ class Game{
             this.levelSelectScreen.visible = false;
             this.app.stage.addChild(this.levelSelectScreen)
         } 
+        //UI
+        {
+            let background = new PIXI.Graphics();
+            background.beginFill(0xA0A0A0);
+            background.drawRect(0, 0, 600, 50);
+            background.endFill();
+            this.UI.addChild(background)
+            let bullet = new PIXI.Sprite(this.app.loader.resources["weapon"].texture);
+            bullet.anchor.set(0);
+            bullet.x = 0;
+            bullet.y = 0;
+            this.UI.addChild(bullet);
+            let text = new PIXI.Text('100/100',{fontFamily : 'Arial', fontSize: 12, fill : 0x0a0a0a, align : 'center'});
+            text.height = 50;
+            text.width = 100;
+            text.resolution = 100;
+            text.anchor.set(0);
+            text.x = 50;
+            text.y = 0;
+            this.UI.addChild(text);
+            text = new PIXI.Text('Next Wave:',{fontFamily : 'Arial', fontSize: 12, fill : 0x0a0a0a, align : 'center'});
+            text.height = 50;
+            text.width = 100;
+            text.resolution = 100;
+            text.anchor.set(0);
+            text.x = 300;
+            text.y = 0;
+            this.UI.addChild(text); 
+            let progressBar = new PIXI.Sprite(this.progressBarFrames[3]);
+            progressBar.anchor.set(0);
+            progressBar.x = 400;
+            progressBar.y = 0;
+            this.UI.addChild(progressBar);
+
+            this.UI.x = 0;
+            this.UI.y = 600;
+            this.UI.width = 600;
+            this.UI.height = 50;
+            this.UI.zIndex = 100;
+            this.UI.visible = false;
+            this.app.stage.addChild(this.UI);
+        }
     }
 
     createTextureSheets(){
-        let tmpSheet = new PIXI.BaseTexture.from(this.app.loader.resources["enemy"].url);
-        let width = 20;
-        let height = 20;
-        this.enemyTextureSheet.standDown = [
-            new PIXI.Texture(tmpSheet, new PIXI.Rectangle(2 * width, 0 * height, width, height))
-        ];
-        this.enemyTextureSheet.standUp = [
-            new PIXI.Texture(tmpSheet, new PIXI.Rectangle(1 * width, 0 * height, width, height))
-        ];
-        this.enemyTextureSheet.standRight = [
-            new PIXI.Texture(tmpSheet, new PIXI.Rectangle(3 * width, 0 * height, width, height))
-        ];
-        this.enemyTextureSheet.standLeft = [
-            new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 0 * height, width, height))
-        ];
+        //Enemy Texture Sheet
+        {
+            let tmpSheet = new PIXI.BaseTexture.from(this.app.loader.resources["enemy"].url);
+            let width = 20;
+            let height = 20;
+            this.enemyTextureSheet.standDown = [
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(2 * width, 0 * height, width, height))
+            ];
+            this.enemyTextureSheet.standUp = [
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(1 * width, 0 * height, width, height))
+            ];
+            this.enemyTextureSheet.standRight = [
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(3 * width, 0 * height, width, height))
+            ];
+            this.enemyTextureSheet.standLeft = [
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 0 * height, width, height))
+            ];
 
-        this.enemyTextureSheet.walkDown = [
-            new PIXI.Texture(tmpSheet, new PIXI.Rectangle(2 * width, 0 * height, width, height)),
-            new PIXI.Texture(tmpSheet, new PIXI.Rectangle(2 * width, 1 * height, width, height))
-        ];
-        this.enemyTextureSheet.walkUp = [
-            new PIXI.Texture(tmpSheet, new PIXI.Rectangle(1 * width, 0 * height, width, height)),
-            new PIXI.Texture(tmpSheet, new PIXI.Rectangle(1 * width, 1 * height, width, height))
-        ];
-        this.enemyTextureSheet.walkRight = [
-            new PIXI.Texture(tmpSheet, new PIXI.Rectangle(3 * width, 0 * height, width, height)),
-            new PIXI.Texture(tmpSheet, new PIXI.Rectangle(3 * width, 1 * height, width, height))
-        ];
-        this.enemyTextureSheet.walkLeft = [
-            new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 0 * height, width, height)),
-            new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 1 * height, width, height))
-        ];
+            this.enemyTextureSheet.walkDown = [
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(2 * width, 0 * height, width, height)),
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(2 * width, 1 * height, width, height))
+            ];
+            this.enemyTextureSheet.walkUp = [
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(1 * width, 0 * height, width, height)),
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(1 * width, 1 * height, width, height))
+            ];
+            this.enemyTextureSheet.walkRight = [
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(3 * width, 0 * height, width, height)),
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(3 * width, 1 * height, width, height))
+            ];
+            this.enemyTextureSheet.walkLeft = [
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 0 * height, width, height)),
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 1 * height, width, height))
+            ];
+        }
+        //Next Wave Progress Bar Frames
+        {
+            let tmpSheet = new PIXI.BaseTexture.from(this.app.loader.resources["progrBarNextWave"].url);
+            let width = 200;
+            let height = 50;
+            this.progressBarFrames = [
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0*width,3*height,width,height)),
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0*width,2*height,width,height)),
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0*width,1*height,width,height)),
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0*width,0*height,width,height))
+            ]
+        }
     }
 
     async inizialiseGane(level){
@@ -390,6 +454,8 @@ class Game{
                 this.gameMap.addChild(tileSprite);
             }
         }
+
+        this.UI.visible = true;
         this.gameMap.visible = true;
         this.gameMap.zIndex = 1;
         this.app.stage.addChild(this.gameMap);
@@ -438,6 +504,9 @@ class Game{
         for(i = 0; i < this.gameMap.children.length; i++){
             this.gameMap.children[i].destroy();
         }
+        this.amonition = 100;
+        this.UI.children[4].texture = this.progressBarFrames[3];
+        this.UI.visible = false;
         this.enemies = [];
         this.bullets = [];
         this.gameMap = new PIXI.Container();
@@ -493,14 +562,16 @@ class Game{
             }
         }
         
-        document.getElementById("nextWave").innerHTML = "Enemies in " + Math.round(((300 - (this.cnt % 300)) / 100));
+        if(this.cnt % 100 == 0){
+            this.UI.children[4].texture = this.progressBarFrames[Math.round(((300 - (this.cnt % 300)) / 100))];
+        }
         if(this.cnt % 300 == 0 && this.cnt != 0){
             for(var i = 0; i < this.level.enemyCount; i++){
                 this.enemies.push(new Enemie(this.level.enemySpawnLocation[i].x,this.level.enemySpawnLocation[i].y,this.enemyTextureSheet,"level1",this.gameMap,(object1,object2) => {return this.isColiding(object1,object2);}));
                 this.app.stage.addChild(this.enemies[this.enemies.length - 1]);
             }
         }
-        
+        document.getElementById("FPS").innerHTML = "FPS: " + Math.round(this.app.ticker.FPS);
         this.cnt++;
     }
 
@@ -515,19 +586,19 @@ class Game{
                                      (object1,object2) => {return this.isColiding(object1,object2);}));
         this.app.stage.addChild(this.bullets[this.bullets.length - 1])
         this.amonition -= 1;
-        document.getElementById("ammo").innerHTML = "Ammo: " + this.amonition + "/100";
+        this.UI.children[2].text = this.amonition + "/100";
     }
 
     reload(){
         if(this.isReloading){
             this.isReloading = false;
             this.amonition = 100;
-            document.getElementById("ammo").innerHTML = "Ammo: " + this.amonition + "/100";
+            this.UI.children[2].text = this.amonition + "/100";
         }
         else{
             this.isReloading = true;
             this.reloadingTime = this.cnt;
-            document.getElementById("ammo").innerHTML = "Ammo: Reloading...";
+            this.UI.children[2].text = "Reloading...";
         }
     }
 }
