@@ -31,10 +31,12 @@ class Game{
         this.endScreen = new PIXI.Container();
         this.helpScreen = new PIXI.Container();
         this.levelSelectScreen = new PIXI.Container();
+        //UI 
+        this.UI = new PIXI.Container();
         //Game Objects
         this.app;
         this.level;
-        this.UI = new PIXI.Container();
+        this.score;
         this.gameMap = new PIXI.Container();
         this.enemies = [];
         this.bullets = [];
@@ -300,10 +302,26 @@ class Game{
         }
         //Game Over Screen
         {
+            let text = new PIXI.Text('Game Over',{fontFamily : 'Arial', fontSize: 24, fill : 0x8B0000, align : 'center'});
+            text.height = 100;
+            text.width = 200;
+            text.resolution = 100;
+            text.anchor.set(0);
+            text.x = 200;
+            text.y = 125;
+            this.endScreen.addChild(text);
+            text = new PIXI.Text('Your score is: ---',{fontFamily : 'Arial', fontSize: 12, fill : 0x0a0a0a, align : 'center'});
+            text.height = 50;
+            text.width = 300;
+            text.resolution = 100;
+            text.anchor.set(0);
+            text.x = 150;
+            text.y = 275;
+            this.endScreen.addChild(text);
             let button = new PIXI.Sprite(this.app.loader.resources["extBtn"].texture);
-            button.anchor.set(0.5);
-            button.x = 300;
-            button.y = 300;
+            button.anchor.set(0);
+            button.x = 200;
+            button.y = 375;
             button.interactive = true;
             button.buttonMode = true;
             button.on("pointerup", ()=>{this.endScreen.visible = false;
@@ -456,6 +474,7 @@ class Game{
             }
         }
 
+        this.score = 0;
         this.UI.visible = true;
         this.gameMap.visible = true;
         this.gameMap.zIndex = 1;
@@ -522,6 +541,7 @@ class Game{
             this.menuScreen.visible = true;
         }
         else if(condition == "gameover"){
+            this.endScreen.children[1].text = "Your score is: " + this.score;
             this.endScreen.visible = true;
         }
     }
@@ -541,6 +561,7 @@ class Game{
             this.reload();
         }
 
+        
         for(var i = 0; i < this.bullets.length; i++){
             let tmp = this.bullets[i].updateBullet(this.enemies,this.gameMap);
             if(tmp[0] == "f"){
@@ -549,6 +570,7 @@ class Game{
                     this.bullets.splice(i,1);
                 }
                 else if(tmp[1] == "e"){
+                    this.score += 10;
                     this.app.stage.removeChild(this.bullets[i]);
                     this.bullets.splice(i,1);
                     this.app.stage.removeChild(this.enemies[tmp[2]]);
@@ -569,7 +591,6 @@ class Game{
                 this.app.stage.addChild(this.enemies[this.enemies.length - 1]);
             }
         }
-        document.getElementById("FPS").innerHTML = "FPS: " + Math.round(this.app.ticker.FPS);
         this.cnt++;
     }
 
