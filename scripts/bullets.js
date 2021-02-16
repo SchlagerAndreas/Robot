@@ -1,7 +1,5 @@
 class Bullet extends PIXI.Sprite{
     constructor(posX,posY,angle,texture,collisionFkt){
-        // var rot = 8+ Math.round((Math.PI + angle) / (Math.PI / 4))
-        // texture.rotate = rot != 16 ? rot : 8;
         super(texture);
         this.anchor.set(0.5,0.5);
         this.pivot.set(5,5);
