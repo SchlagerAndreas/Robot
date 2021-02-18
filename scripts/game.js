@@ -134,7 +134,7 @@ class Game{
 
     createScreens(){
         //Title Screen
-        let fontsize = 12;
+        let fontsize = 10;
         {
             let background = new PIXI.Sprite(this.app.loader.resources["titlescreen"].texture);
             background.anchor.set(0.5);
