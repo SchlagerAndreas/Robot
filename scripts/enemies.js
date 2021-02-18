@@ -43,7 +43,7 @@ class Enemie extends PIXI.AnimatedSprite{
             for(i = 0; i < this.map.children.length; i++){
                 if(this.map.children[i].isSolid){
                     if(this.colFkt(this,this.map.children[i])){
-                        this.x = this.map.children[i].x + 21;
+                        this.x = this.map.children[i].x + 26;
                     }
                 }
             }
@@ -54,7 +54,7 @@ class Enemie extends PIXI.AnimatedSprite{
             for(i = 0; i < this.map.children.length; i++){
                 if(this.map.children[i].isSolid){
                     if(this.colFkt(this,this.map.children[i])){
-                        this.x = this.map.children[i].x - 21;
+                        this.x = this.map.children[i].x - 26;
                     }
                 }
             }
@@ -65,7 +65,7 @@ class Enemie extends PIXI.AnimatedSprite{
             for(i = 0; i < this.map.children.length; i++){
                 if(this.map.children[i].isSolid){
                     if(this.colFkt(this,this.map.children[i])){
-                        this.y = this.map.children[i].y + 21;
+                        this.y = this.map.children[i].y + 26;
                     }
                 }
             }
@@ -76,7 +76,7 @@ class Enemie extends PIXI.AnimatedSprite{
             for(i = 0; i < this.map.children.length; i++){
                 if(this.map.children[i].isSolid){
                     if(this.colFkt(this,this.map.children[i])){
-                        this.y = this.map.children[i].y - 21;
+                        this.y = this.map.children[i].y - 26;
                     }
                 }
             }
@@ -92,18 +92,18 @@ class Enemie extends PIXI.AnimatedSprite{
         this.mapGraph.vertexes = this.map.children;
         for(var i = 0; i < this.map.children.length; i++){
             let adjIndex = [];
-            if(!(i-1 < 0 || i-1 > 900))adjIndex.push(i-1);
-            if(!(i+1 < 0 || i+1 > 900))adjIndex.push(i+1);
-            if(!(i-30 < 0 || i-30 > 900))adjIndex.push(i-30);
-            if(!(i+30 < 0 || i+30  > 900))adjIndex.push(i+30);
+            if(!(i-1 < 0 || i-1 > 600))adjIndex.push(i-1);
+            if(!(i+1 < 0 || i+1 > 600))adjIndex.push(i+1);
+            if(!(i-30 < 0 || i-30 > 600))adjIndex.push(i-30);
+            if(!(i+30 < 0 || i+30  > 600))adjIndex.push(i+30);
 
             this.mapGraph.edges[i] = adjIndex;
         }
     }
 
     getNode(x,y){
-        let nodeX = Math.floor(x / 20);
-        let nodeY = Math.floor(y / 20);
+        let nodeX = Math.floor(x / 30);
+        let nodeY = Math.floor(y / 30);
         nodeY = nodeY == 30 ? 29 : nodeY;
         nodeX = nodeX == 30 ? 29 : nodeX;
         let nodeIndex = nodeY * 30 + nodeX;

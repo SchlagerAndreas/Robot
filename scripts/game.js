@@ -88,7 +88,7 @@ class Game{
         var that = this;
         this.app = new PIXI.Application(
             {
-                width: 600,
+                width: 900,
                 height: 650,
                 transparent: true,
             }
@@ -631,17 +631,17 @@ class Game{
 
         var i = 0;
         var backgroundTextures = [];
-        for(i = 0; i < 10; i++){
-            let x = i % 5;
-            let y = Math.floor (i / 5);
+        for(i = 0; i < 16; i++){
+            let x = i % 8;
+            let y = Math.floor (i / 8);
             backgroundTextures[i] = new PIXI.Texture(
                                     this.app.loader.resources["tiles"].texture,
                                     new PIXI.Rectangle(x*this.level.map.tileSize,y*this.level.map.tileSize,this.level.map.tileSize,this.level.map.tileSize));
         }
-        for(let y = 0; y < this.level.map.width; y++){
+        for(let y = 0; y < this.level.map.height; y++){
             for(let x = 0; x < this.level.map.width; x++){
-                let tile =  this.level.map.tiles[y * this.level.map.width + x];
-                let tileSprite = new MapObject(x * this.level.map.tileSize + 10,y * this.level.map.tileSize + 10, backgroundTextures[tile], (tile == 0 ? true : false));
+                let tile =  this.level.map.tiles[y][x];
+                let tileSprite = new MapObject(x * this.level.map.tileSize + 15,y * this.level.map.tileSize + 15, backgroundTextures[tile], (tile > 5 ? true : false));
                 this.gameMap.addChild(tileSprite);
             }
         }

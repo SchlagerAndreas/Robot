@@ -17,8 +17,8 @@ class Player extends PIXI.Sprite{
             this.y -= this.speed;
             for(i = 0; i < map.children.length; i++){
                 if(map.children[i].isSolid){
-                    if(this.colFkt(this,map.children[i])){
-                        this.y = map.children[i].y + 21;
+                    if(this.colFkt(map.children[i],this)){
+                        this.y = map.children[i].y + 26;
                     }
                 }
             }
@@ -28,8 +28,8 @@ class Player extends PIXI.Sprite{
             this.y += this.speed;
             for(i = 0; i < map.children.length; i++){
                 if(map.children[i].isSolid){
-                    if(this.colFkt(this,map.children[i])){
-                        this.y = map.children[i].y - 21;
+                    if(this.colFkt(map.children[i],this)){
+                        this.y = map.children[i].y - 26;
                     }
                 }
             }
@@ -39,8 +39,8 @@ class Player extends PIXI.Sprite{
             this.x += this.speed;
             for(i = 0; i < map.children.length; i++){
                 if(map.children[i].isSolid){
-                    if(this.colFkt(this,map.children[i])){
-                        this.x = map.children[i].x - 21;
+                    if(this.colFkt(map.children[i],this)){
+                        this.x = map.children[i].x - 26;
                     }
                 }
             }
@@ -50,8 +50,8 @@ class Player extends PIXI.Sprite{
             this.x -= this.speed;
             for(i = 0; i < map.children.length; i++){
                 if(map.children[i].isSolid){
-                    if(this.colFkt(this,map.children[i])){
-                        this.x = map.children[i].x + 21;
+                    if(this.colFkt(map.children[i],this)){
+                        this.x = map.children[i].x + 26;
                     }
                 }
             }
