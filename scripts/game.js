@@ -108,7 +108,6 @@ class Game{
                        .add("background","field.png")
                        .add("wall","wall.png")
                        .add("enemy","enemy_new.png")
-                       .add("titlescreen", "titlescreen.png")
                        .add("playBtn","buttons/play-button.png")
                        .add("extBtn","buttons/exit-button.png")
                        .add("levelBtns","buttons/level-select-buttons.png")
@@ -136,24 +135,24 @@ class Game{
         //Title Screen
         let fontsize = 10;
         {
-            let background = new PIXI.Sprite(this.app.loader.resources["titlescreen"].texture);
-            background.anchor.set(0.5);
-            background.x = 300;
-            background.y = 300;
+            let background = new PIXI.Graphics();
+            background.beginFill(0xA0A0A0);
+            background.drawRect(0, 0, 900, 600);
+            background.endFill();     
             this.titleScreen.addChild(background);
             let button = new PIXI.Sprite(this.app.loader.resources["playBtn"].texture);
-            button.anchor.set(0.5);
-            button.x = 300;
-            button.y = 200;
+            button.anchor.set(0);
+            button.x = 200;
+            button.y = 250;
             button.interactive = true;
             button.buttonMode = true;
             button.on("pointerup",()=>{this.titleScreen.visible = false;
                                        this.levelSelectScreen.visible = true;})
             this.titleScreen.addChild(button);
             button = new PIXI.Sprite(this.app.loader.resources["helpBtn"].texture);
-            button.anchor.set(0.5);
-            button.x = 300;
-            button.y = 400;
+            button.anchor.set(0);
+            button.x = 500;
+            button.y = 250;
             button.interactive = true;
             button.buttonMode = true;
             button.on("pointerup",()=>{this.titleScreen.visible = false;
@@ -170,7 +169,7 @@ class Game{
             text.width = 200;
             text.resolution = 100;
             text.anchor.set(0);
-            text.x = 200;
+            text.x = 350;
             text.y = 25;
             this.menuScreen.addChild(text);  
             
@@ -179,13 +178,13 @@ class Game{
             text.width = 80;
             text.resolution = 100;
             text.anchor.set(0);
-            text.x = 200;
+            text.x = 350;
             text.y = 150;
             this.menuScreen.addChild(text);
 
             let button = new PIXI.Sprite(this.app.loader.resources["select"].texture);
             button.anchor.set(0);
-            button.x = 300;
+            button.x = 450;
             button.y = 150;
             button.interactive = true;
             button.buttonMode = true;
@@ -194,7 +193,7 @@ class Game{
             
             button = new PIXI.Sprite(this.app.loader.resources["playBtn"].texture);
             button.anchor.set(0);
-            button.x = 200;
+            button.x = 350;
             button.y = 225;
             button.interactive = true;
             button.buttonMode = true;
@@ -205,7 +204,7 @@ class Game{
 
             button = new PIXI.Sprite(this.app.loader.resources["helpBtn"].texture);
             button.anchor.set(0);
-            button.x = 200;
+            button.x = 350;
             button.y = 350;
             button.interactive = true;
             button.buttonMode = true;
@@ -217,7 +216,7 @@ class Game{
 
             button = new PIXI.Sprite(this.app.loader.resources["extBtn"].texture);
             button.anchor.set(0);
-            button.x = 200;
+            button.x = 350;
             button.y = 475;
             button.interactive = true;
             button.buttonMode = true;
@@ -264,7 +263,7 @@ class Game{
                 button.interactive = true;
                 button.buttonMode = true;
                 button.on("pointerup",()=>{this.FPSDisplay.visible = true;
-                                           this.FPSDisplay.x = 560;
+                                           this.FPSDisplay.x = 860;
                                            this.FPSDisplay.y = 0;
                                            this.menuScreen.children[6].visible = false;})
                 select.addChild(button);
@@ -308,7 +307,7 @@ class Game{
                 button.interactive = true;
                 button.buttonMode = true;
                 button.on("pointerup",()=>{this.FPSDisplay.visible = true;
-                                           this.FPSDisplay.x = 560;
+                                           this.FPSDisplay.x = 860;
                                            this.FPSDisplay.y = 580;
                                            this.menuScreen.children[6].visible = false;})
                 select.addChild(button);
@@ -344,7 +343,7 @@ class Game{
                 select.addChild(text);
 
 
-                select.x = 300;
+                select.x = 450;
                 select.y = 190;
                 select.width = 100;
                 select.height = 200;
@@ -363,12 +362,12 @@ class Game{
             text.width = 200;
             text.resolution = 100;
             text.anchor.set(0);
-            text.x = 200;
+            text.x = 350;
             text.y = 60;
             this.helpScreen.addChild(text); 
             let image = new PIXI.Sprite(this.app.loader.resources["contrWASD"].texture);
             image.anchor.set(0);
-            image.x = 60;
+            image.x = 210;
             image.y = 210;
             this.helpScreen.addChild(image);
             text = new PIXI.Text('Move',{fontFamily : 'Arial', fontSize: fontsize, fill : 0x0a0a0a, align : 'center'});
@@ -376,12 +375,12 @@ class Game{
             text.width = 80;
             text.resolution = 100;
             text.anchor.set(0);
-            text.x = 160;
+            text.x = 310;
             text.y = 210;
             this.helpScreen.addChild(text);
             image = new PIXI.Sprite(this.app.loader.resources["contrR"].texture);
             image.anchor.set(0);
-            image.x = 60;
+            image.x = 210;
             image.y = 270;
             this.helpScreen.addChild(image);
             text = new PIXI.Text('Reload',{fontFamily : 'Arial', fontSize: fontsize, fill : 0x0a0a0a, align : 'center'});
@@ -389,12 +388,12 @@ class Game{
             text.width = 80;
             text.resolution = 100;
             text.anchor.set(0);
-            text.x = 160;
+            text.x = 310;
             text.y = 270;
             this.helpScreen.addChild(text);
             image = new PIXI.Sprite(this.app.loader.resources["contrEsc"].texture);
             image.anchor.set(0);
-            image.x = 60;
+            image.x = 210;
             image.y = 330;
             this.helpScreen.addChild(image);
             text = new PIXI.Text('Pause',{fontFamily : 'Arial', fontSize: fontsize, fill : 0x0a0a0a, align : 'center'});
@@ -402,13 +401,13 @@ class Game{
             text.width = 80;
             text.resolution = 100;
             text.anchor.set(0);
-            text.x = 160;
+            text.x = 310;
             text.y = 330;
             this.helpScreen.addChild(text);
 
             image = new PIXI.Sprite(this.app.loader.resources["contrMouseMove"].texture);
             image.anchor.set(0);
-            image.x = 380;
+            image.x = 530;
             image.y = 210;
             this.helpScreen.addChild(image);
             text = new PIXI.Text('Aim',{fontFamily : 'Arial', fontSize: fontsize, fill : 0x0a0a0a, align : 'center'});
@@ -416,12 +415,12 @@ class Game{
             text.width = 80;
             text.resolution = 100;
             text.anchor.set(0);
-            text.x = 480;
+            text.x = 630;
             text.y = 210;
             this.helpScreen.addChild(text);
             image = new PIXI.Sprite(this.app.loader.resources["contrMouseLClick"].texture);
             image.anchor.set(0);
-            image.x = 380;
+            image.x = 530;
             image.y = 270;
             this.helpScreen.addChild(image);
             text = new PIXI.Text('Shoot',{fontFamily : 'Arial', fontSize: fontsize, fill : 0x0a0a0a, align : 'center'});
@@ -429,12 +428,12 @@ class Game{
             text.width = 80;
             text.resolution = 100;
             text.anchor.set(0);
-            text.x = 480;
+            text.x = 630;
             text.y = 270;
             this.helpScreen.addChild(text);
             let button = new PIXI.Sprite(this.app.loader.resources["backBtn"].texture);
             button.anchor.set(0);
-            button.x = 200;
+            button.x = 350;
             button.y = 440;
             button.interactive = true;
             button.buttonMode = true;
@@ -454,7 +453,7 @@ class Game{
             text.width = 200;
             text.resolution = 100;
             text.anchor.set(0);
-            text.x = 200;
+            text.x = 350;
             text.y = 125;
             this.endScreen.addChild(text);
             text = new PIXI.Text('Your score is: ---',{fontFamily : 'Arial', fontSize: fontsize, fill : 0x0a0a0a, align : 'center'});
@@ -462,12 +461,12 @@ class Game{
             text.width = 300;
             text.resolution = 100;
             text.anchor.set(0);
-            text.x = 150;
+            text.x = 300;
             text.y = 275;
             this.endScreen.addChild(text);
             let button = new PIXI.Sprite(this.app.loader.resources["extBtn"].texture);
             button.anchor.set(0);
-            button.x = 200;
+            button.x = 350;
             button.y = 375;
             button.interactive = true;
             button.buttonMode = true;
@@ -483,11 +482,16 @@ class Game{
         }
         //Level Select Screen
         {
+            let background = new PIXI.Graphics();
+            background.beginFill(0xA0A0A0);
+            background.drawRect(0, 0, 900, 600);
+            background.endFill();     
+            this.levelSelectScreen.addChild(background);
             for(var i = 0; i < 9; i++){
                 let level = i + 1; //i starts by 0 levels by 1
                 let LSbutton = new PIXI.Sprite(new PIXI.Texture(this.app.loader.resources["levelBtns"].texture, new PIXI.Rectangle((i%3)*100,Math.floor(i/3)*100,100,100)));
                 LSbutton.anchor.set(0.5);
-                LSbutton.x = 125 + (i % 3) * 175;
+                LSbutton.x = 275 + (i % 3) * 175;
                 LSbutton.y = 230 + Math.floor(i / 3) * 140;
                 LSbutton.interactive = true;
                 LSbutton.buttonMode = true;
@@ -495,13 +499,13 @@ class Game{
                                                 this.inizialiseGane(level)})
                 this.levelSelectScreen.addChild(LSbutton);
             }
-            let text = new PIXI.Text('Level Select',{fontFamily : 'Arial', fontSize: fontsize, fill : 0x0a0a0a, align : 'center'});
+            let text = new PIXI.Text('Select Level',{fontFamily : 'Arial', fontSize: fontsize, fill : 0x0a0a0a, align : 'center'});
             text.height = 100;
             text.width = 450;
             text.resolution = 100;
-            text.anchor.set(0.5);
-            text.x = 300;
-            text.y = 90;
+            text.anchor.set(0);
+            text.x = 225;
+            text.y = 40;
             this.levelSelectScreen.addChild(text);
             this.levelSelectScreen.zIndex = 996;
             this.levelSelectScreen.visible = false;
@@ -510,8 +514,8 @@ class Game{
         //UI
         {
             let background = new PIXI.Graphics();
-            background.beginFill(0xA0A0A0);
-            background.drawRect(0, 0, 600, 50);
+            background.beginFill(0x3b3b3b);
+            background.drawRect(0, 0, 900, 50);
             background.endFill();
             this.UI.addChild(background)
             let bullet = new PIXI.Sprite(this.app.loader.resources["weapon"].texture);
@@ -541,9 +545,18 @@ class Game{
             progressBar.y = 0;
             this.UI.addChild(progressBar);
 
+            text = new PIXI.Text('Score:',{fontFamily : 'Arial', fontSize: fontsize, fill : 0x0a0a0a, align : 'center'});
+            text.height = 50;
+            text.width = 150;
+            text.resolution = 100;
+            text.anchor.set(0);
+            text.x = 650;
+            text.y = 0;
+            this.UI.addChild(text); 
+
             this.UI.x = 0;
             this.UI.y = 600;
-            this.UI.width = 600;
+            this.UI.width = 900;
             this.UI.height = 50;
             this.UI.zIndex = 100;
             this.UI.visible = false;
@@ -766,6 +779,13 @@ class Game{
                 this.enemies.push(new Enemie(this.level.enemySpawnLocation[i].x,this.level.enemySpawnLocation[i].y,this.enemyTextureSheet,"level1",this.gameMap,(object1,object2) => {return this.isColiding(object1,object2);}));
                 this.app.stage.addChild(this.enemies[this.enemies.length - 1]);
             }
+        }
+        this.UI.children[5].text = "Score: " + this.score;
+        if(this.score >= 100){
+            this.UI.children[5].width = 200;
+        }
+        if(this.score >= 1000){
+            this.UI.children[5].width = 250;
         }
         this.FPSDisplay.children[1].text = "FPS: " + Math.round(this.app.ticker.FPS);
         this.cnt++;
