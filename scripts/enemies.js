@@ -43,7 +43,7 @@ class Enemie extends PIXI.AnimatedSprite{
             for(i = 0; i < this.map.children.length; i++){
                 if(this.map.children[i].isSolid){
                     if(this.colFkt(this,this.map.children[i])){
-                        this.x = this.map.children[i].x + 26;
+                        this.x = this.map.children[i].x + 28;
                     }
                 }
             }
@@ -54,7 +54,7 @@ class Enemie extends PIXI.AnimatedSprite{
             for(i = 0; i < this.map.children.length; i++){
                 if(this.map.children[i].isSolid){
                     if(this.colFkt(this,this.map.children[i])){
-                        this.x = this.map.children[i].x - 26;
+                        this.x = this.map.children[i].x - 28;
                     }
                 }
             }
@@ -65,7 +65,7 @@ class Enemie extends PIXI.AnimatedSprite{
             for(i = 0; i < this.map.children.length; i++){
                 if(this.map.children[i].isSolid){
                     if(this.colFkt(this,this.map.children[i])){
-                        this.y = this.map.children[i].y + 26;
+                        this.y = this.map.children[i].y + 28;
                     }
                 }
             }
@@ -76,7 +76,7 @@ class Enemie extends PIXI.AnimatedSprite{
             for(i = 0; i < this.map.children.length; i++){
                 if(this.map.children[i].isSolid){
                     if(this.colFkt(this,this.map.children[i])){
-                        this.y = this.map.children[i].y - 26;
+                        this.y = this.map.children[i].y - 28;
                     }
                 }
             }

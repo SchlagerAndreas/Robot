@@ -45,6 +45,7 @@ class Game{
         //texture Sheets
         this.progressBarFrames = [];
         this.enemyTextureSheet = {};
+        this.playerTextureSheet = {};
 
         this.cnt = 0;
         
@@ -103,7 +104,7 @@ class Game{
         PIXI.settings.SCALE_MODE.NEAREST;
 
         this.app.loader.baseUrl = "graphics";
-        this.app.loader.add("player","new_player.png")
+        this.app.loader.add("player","player.png")
                        .add("bullet","bullet.png")
                        .add("background","field.png")
                        .add("wall","wall.png")
@@ -121,6 +122,7 @@ class Game{
                        .add("progrBarNextWave","nextWaveBar.png")
                        .add("weapon","weapon.png")
                        .add("select","select/select.png")
+                       .add("flare","flare.png")
                        .add("tiles","mapTiles.png");
         this.app.loader.onComplete.add(function(){that.creatingCombinedGraphics()})
         this.app.loader.load();
@@ -164,6 +166,8 @@ class Game{
         }
         //Pause Screen
         {
+            let background = new PIXI.Sprite(this.app.loader.resources["flare"].texture);
+            this.menuScreen.addChild(background);
             let text = new PIXI.Text('Pause',{fontFamily : 'Arial', fontSize: fontsize, fill : 0x0a0a0a, align : 'center'});
             text.height = 100;
             text.width = 200;
@@ -188,7 +192,7 @@ class Game{
             button.y = 150;
             button.interactive = true;
             button.buttonMode = true;
-            button.on("pointerup",()=>{this.menuScreen.children[6].visible = !this.menuScreen.children[6].visible;})
+            button.on("pointerup",()=>{this.menuScreen.children[7].visible = !this.menuScreen.children[7].visible;})
             this.menuScreen.addChild(button);
             
             button = new PIXI.Sprite(this.app.loader.resources["playBtn"].texture);
@@ -197,7 +201,7 @@ class Game{
             button.y = 225;
             button.interactive = true;
             button.buttonMode = true;
-            button.on("pointerup",()=>{this.menuScreen.children[6].visible = false;
+            button.on("pointerup",()=>{this.menuScreen.children[7].visible = false;
                                        this.menuScreen.visible = false; 
                                        this.app.ticker.add(this.tickerFun);})
             this.menuScreen.addChild(button);
@@ -209,7 +213,7 @@ class Game{
             button.interactive = true;
             button.buttonMode = true;
             button.on("pointerup",()=>{this.helpScreen.lastScreen = "pauseScreen";
-                                       this.menuScreen.children[6].visible = false;
+                                       this.menuScreen.children[7].visible = false;
                                        this.menuScreen.visible = false;
                                        this.helpScreen.visible = true;})
             this.menuScreen.addChild(button);
@@ -220,7 +224,7 @@ class Game{
             button.y = 475;
             button.interactive = true;
             button.buttonMode = true;
-            button.on("pointerup",()=>{this.menuScreen.children[6].visible = false;
+            button.on("pointerup",()=>{this.menuScreen.children[7].visible = false;
                                        this.FPSDisplay.visible = false;
                                        this.menuScreen.visible = false;
                                        this.gameMap.visible = false;
@@ -243,7 +247,7 @@ class Game{
                 button.interactive = true;
                 button.buttonMode = true;
                 button.on("pointerup",()=>{this.FPSDisplay.visible = false;
-                                           this.menuScreen.children[6].visible = false;})
+                                           this.menuScreen.children[7].visible = false;})
                 select.addChild(button);
                 let text = new PIXI.Text('None',{fontFamily : 'Arial', fontSize: fontsize, fill : 0x0a0a0a, align : 'center'});
                 text.height = textHeight;
@@ -265,7 +269,7 @@ class Game{
                 button.on("pointerup",()=>{this.FPSDisplay.visible = true;
                                            this.FPSDisplay.x = 860;
                                            this.FPSDisplay.y = 0;
-                                           this.menuScreen.children[6].visible = false;})
+                                           this.menuScreen.children[7].visible = false;})
                 select.addChild(button);
                 text = new PIXI.Text('Top-Right',{fontFamily : 'Arial', fontSize: fontsize, fill : 0x0a0a0a, align : 'center'});
                 text.height = textHeight;
@@ -287,7 +291,7 @@ class Game{
                 button.on("pointerup",()=>{this.FPSDisplay.visible = true;
                                            this.FPSDisplay.x = 0;
                                            this.FPSDisplay.y = 0;
-                                           this.menuScreen.children[6].visible = false;})
+                                           this.menuScreen.children[7].visible = false;})
                 select.addChild(button);
                 text = new PIXI.Text('Top-Left',{fontFamily : 'Arial', fontSize: fontsize, fill : 0x0a0a0a, align : 'center'});
                 text.height = textHeight;
@@ -309,7 +313,7 @@ class Game{
                 button.on("pointerup",()=>{this.FPSDisplay.visible = true;
                                            this.FPSDisplay.x = 860;
                                            this.FPSDisplay.y = 580;
-                                           this.menuScreen.children[6].visible = false;})
+                                           this.menuScreen.children[7].visible = false;})
                 select.addChild(button);
                 text = new PIXI.Text('Bottom-Right',{fontFamily : 'Arial', fontSize: fontsize, fill : 0x0a0a0a, align : 'center'});
                 text.height = textHeight;
@@ -331,7 +335,7 @@ class Game{
                 button.on("pointerup",()=>{this.FPSDisplay.visible = true;
                                            this.FPSDisplay.x = 0;
                                            this.FPSDisplay.y = 580;
-                                           this.menuScreen.children[6].visible = false;})
+                                           this.menuScreen.children[7].visible = false;})
                 select.addChild(button);
                 text = new PIXI.Text('Bottom-Left',{fontFamily : 'Arial', fontSize: fontsize, fill : 0x0a0a0a, align : 'center'});
                 text.height = textHeight;
@@ -357,6 +361,8 @@ class Game{
         }
         //Help Screen
         {
+            let background = new PIXI.Sprite(this.app.loader.resources["flare"].texture);
+            this.helpScreen.addChild(background);
             let text = new PIXI.Text('Controls:',{fontFamily : 'Arial', fontSize: fontsize, fill : 0x0a0a0a, align : 'center'});
             text.height = 100;
             text.width = 200;
@@ -448,6 +454,8 @@ class Game{
         }
         //Game Over Screen
         {
+            let background = new PIXI.Sprite(this.app.loader.resources["flare"].texture);
+            this.endScreen.addChild(background);
             let text = new PIXI.Text('Game Over',{fontFamily : 'Arial', fontSize: fontsize, fill : 0x8B0000, align : 'center'});
             text.height = 100;
             text.width = 200;
@@ -628,6 +636,45 @@ class Game{
                 new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 2 * height, width, height))
             ];
         }
+        //Player Texture Sheet
+        {
+            let tmpSheet = new PIXI.BaseTexture.from(this.app.loader.resources["player"].url);
+            let width = 25;
+            let height = 25;
+            this.playerTextureSheet.standDown = [
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(1 * width, 1 * height, width, height))
+            ];
+            this.playerTextureSheet.standUp = [
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(2 * width, 1 * height, width, height))
+            ];
+            this.playerTextureSheet.standRight = [
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(3 * width, 1 * height, width, height))
+            ];
+            this.playerTextureSheet.standLeft = [
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 1 * height, width, height))
+            ];
+
+            this.playerTextureSheet.walkDown = [
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(1 * width, 0 * height, width, height)),
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(1 * width, 1 * height, width, height)),
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(1 * width, 2 * height, width, height))
+            ];
+            this.playerTextureSheet.walkUp = [
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(2 * width, 0 * height, width, height)),
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(2 * width, 1 * height, width, height)),
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(2 * width, 2 * height, width, height))
+            ];
+            this.playerTextureSheet.walkRight = [
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(3 * width, 0 * height, width, height)),
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(3 * width, 1 * height, width, height)),
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(3 * width, 2 * height, width, height))
+            ];
+            this.playerTextureSheet.walkLeft = [
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 0 * height, width, height)),
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 1 * height, width, height)),
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 2 * height, width, height))
+            ];
+        }
         //Next Wave Progress Bar Frames
         {
             let tmpSheet = new PIXI.BaseTexture.from(this.app.loader.resources["progrBarNextWave"].url);
@@ -679,7 +726,7 @@ class Game{
         
 
 
-        this.player = new Player(this.level.playerSpawnLocation.x,this.level.playerSpawnLocation.y,new PIXI.Texture(this.app.loader.resources["player"].texture, new PIXI.Rectangle(40,20,20,20)),(object1,object2) => {return this.isColiding(object1,object2);});
+        this.player = new Player(this.level.playerSpawnLocation.x,this.level.playerSpawnLocation.y, this.playerTextureSheet,(object1,object2) => {return this.isColiding(object1,object2);});
         this.app.stage.addChild(this.player);
 
 
@@ -714,10 +761,13 @@ class Game{
             this.gameMap.children[i].destroy();
         }
         this.amonition = 100;
+        this.cnt = 0;
         this.UI.children[4].texture = this.progressBarFrames[3];
         this.UI.visible = false;
         this.enemies = [];
         this.bullets = [];
+        this.isReloading = false;
+        this.UI.children[2].text = this.amonition + "/100";
         this.gameMap = new PIXI.Container();
         this.player.destroy();
         this.app.ticker.remove(this.tickerFun);
@@ -730,7 +780,7 @@ class Game{
             this.menuScreen.visible = true;
         }
         else if(condition == "gameover"){
-            this.endScreen.children[1].text = "Your score is: " + this.score;
+            this.endScreen.children[2].text = "Your score is: " + this.score;
             this.endScreen.visible = true;
         }
     }
