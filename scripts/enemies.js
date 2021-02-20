@@ -26,61 +26,72 @@ class Enemie extends PIXI.AnimatedSprite{
         this.currentPath = [];
         this.cnt = 0;
         this.direction = 0;
+        this.duration = 0;
         this.play();
     }
 
     updateEnemy(player){
-        if(this.cnt % 9 == 0){
-            this.cnt = 0;
-            this.findDirection(player);
-            this.direction = this.currentPath[this.cnt] - this.currentPath[this.cnt + 1];
+        if(this.duration == 0){
+            if(this.isAtNodeCenter()){
+                this.findDirection(player);
+                this.direction = this.currentPath[this.cnt] - this.currentPath[this.cnt + 1];
+                this.duration = Math.round(30 / this.speed);
+            }
+            else{
+                this.direction = 0;
+            }
         }
-        this.cnt++;
-        var i = 0;
-        if(this.direction == 1){
-            this.x -= this.speed;
-            this.playWalkAnimation("up");
-            for(i = 0; i < this.map.children.length; i++){
-                if(this.map.children[i].isSolid){
-                    if(this.colFkt(this,this.map.children[i])){
-                        this.x = this.map.children[i].x + 28;
+        
+        if(this.direction != 0){
+            var i = 0;
+            if(this.direction == 1){
+                this.x -= this.speed;
+                this.playWalkAnimation("up");
+                for(i = 0; i < this.map.children.length; i++){
+                    if(this.map.children[i].isSolid){
+                        if(this.colFkt(this,this.map.children[i])){
+                            this.x = this.map.children[i].x + 28;
+                        }
                     }
                 }
             }
-        }
-        else if(this.direction == -1){
-            this.x += this.speed;
-            this.playWalkAnimation("down");
-            for(i = 0; i < this.map.children.length; i++){
-                if(this.map.children[i].isSolid){
-                    if(this.colFkt(this,this.map.children[i])){
-                        this.x = this.map.children[i].x - 28;
+            else if(this.direction == -1){
+                this.x += this.speed;
+                this.playWalkAnimation("down");
+                for(i = 0; i < this.map.children.length; i++){
+                    if(this.map.children[i].isSolid){
+                        if(this.colFkt(this,this.map.children[i])){
+                            this.x = this.map.children[i].x - 28;
+                        }
                     }
                 }
             }
-        }
-        else if(this.direction == 30){
-            this.y -= this.speed;
-            this.playWalkAnimation("left");
-            for(i = 0; i < this.map.children.length; i++){
-                if(this.map.children[i].isSolid){
-                    if(this.colFkt(this,this.map.children[i])){
-                        this.y = this.map.children[i].y + 28;
+            else if(this.direction == 30){
+                this.y -= this.speed;
+                this.playWalkAnimation("left");
+                for(i = 0; i < this.map.children.length; i++){
+                    if(this.map.children[i].isSolid){
+                        if(this.colFkt(this,this.map.children[i])){
+                            this.y = this.map.children[i].y + 28;
+                        }
                     }
                 }
             }
-        }
-        else if(this.direction == -30){
-            this.y += this.speed;
-            this.playWalkAnimation("right");
-            for(i = 0; i < this.map.children.length; i++){
-                if(this.map.children[i].isSolid){
-                    if(this.colFkt(this,this.map.children[i])){
-                        this.y = this.map.children[i].y - 28;
+            else if(this.direction == -30){
+                this.y += this.speed;
+                this.playWalkAnimation("right");
+                for(i = 0; i < this.map.children.length; i++){
+                    if(this.map.children[i].isSolid){
+                        if(this.colFkt(this,this.map.children[i])){
+                            this.y = this.map.children[i].y - 28;
+                        }
                     }
                 }
             }
+            this.duration--;
         }
+        
+
         if(this.colFkt(this,player)){
             return true;
         }
@@ -108,6 +119,18 @@ class Enemie extends PIXI.AnimatedSprite{
         nodeX = nodeX == 30 ? 29 : nodeX;
         let nodeIndex = nodeY * 30 + nodeX;
         return nodeIndex;
+    }
+
+    isAtNodeCenter(){
+        let node = this.getNode(this.x,this.y);
+        let nodeCenterY = 15 + Math.floor(node / 30) * 30;
+        let nodeCenterX = 15 + (node % 30) * 30;
+        if(nodeCenterX == this.x && nodeCenterY == this.y){
+            return true;
+        }
+        this.x = nodeCenterX;
+        this.y = nodeCenterY;
+        return false;
     }
 
     findDirection(player){

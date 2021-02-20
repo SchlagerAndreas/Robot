@@ -828,7 +828,7 @@ class Game{
         }
         
         this.UI.children[4].texture = this.progressBarFrames[Math.round(((300 - (this.cnt % 300)) / 100))];
-        if(this.cnt % 300 == 0 && this.cnt != 0){
+        if(this.cnt % 300 == 0 && this.cnt != 0 && this.enemies.length < 50){
             for(var i = 0; i < this.level.enemyCount; i++){
                 this.enemies.push(new Enemie(this.level.enemySpawnLocation[i].x,this.level.enemySpawnLocation[i].y,this.enemyTextureSheet,"level1",this.gameMap,(object1,object2) => {return this.isColiding(object1,object2);}));
                 this.app.stage.addChild(this.enemies[this.enemies.length - 1]);
