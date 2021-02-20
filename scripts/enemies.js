@@ -185,22 +185,22 @@ class Enemie extends PIXI.AnimatedSprite{
     playWalkAnimation(direction){
         if(!this.playing){
             if(direction == "up"){
-                this.textures = this.textureSheet.walkUp;
+                this.textures = this.textureSheet.walkLeft;
                 this.loop = false;
                 this.play();
             }
             else if(direction == "down"){
-                this.textures = this.textureSheet.walkDown;
-                this.loop = false;
-                this.play();
-            }
-            else if(direction == "right"){
                 this.textures = this.textureSheet.walkRight;
                 this.loop = false;
                 this.play();
             }
+            else if(direction == "right"){
+                this.textures = this.textureSheet.walkDown;
+                this.loop = false;
+                this.play();
+            }
             else if(direction == "left"){
-                this.textures = this.textureSheet.walkLeft;
+                this.textures = this.textureSheet.walkUp;
                 this.loop = false;
                 this.play();
             }

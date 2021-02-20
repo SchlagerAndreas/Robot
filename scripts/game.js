@@ -107,7 +107,7 @@ class Game{
                        .add("bullet","bullet.png")
                        .add("background","field.png")
                        .add("wall","wall.png")
-                       .add("enemy","enemy_new.png")
+                       .add("enemy","robot.png")
                        .add("playBtn","buttons/play-button.png")
                        .add("extBtn","buttons/exit-button.png")
                        .add("levelBtns","buttons/level-select-buttons.png")
@@ -592,36 +592,40 @@ class Game{
         //Enemy Texture Sheet
         {
             let tmpSheet = new PIXI.BaseTexture.from(this.app.loader.resources["enemy"].url);
-            let width = 20;
-            let height = 20;
+            let width = 25;
+            let height = 25;
             this.enemyTextureSheet.standDown = [
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(2 * width, 0 * height, width, height))
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(2 * width, 1 * height, width, height))
             ];
             this.enemyTextureSheet.standUp = [
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(1 * width, 0 * height, width, height))
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(1 * width, 1 * height, width, height))
             ];
             this.enemyTextureSheet.standRight = [
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(3 * width, 0 * height, width, height))
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(3 * width, 1 * height, width, height))
             ];
             this.enemyTextureSheet.standLeft = [
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 0 * height, width, height))
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 1 * height, width, height))
             ];
 
             this.enemyTextureSheet.walkDown = [
                 new PIXI.Texture(tmpSheet, new PIXI.Rectangle(2 * width, 0 * height, width, height)),
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(2 * width, 1 * height, width, height))
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(2 * width, 1 * height, width, height)),
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(2 * width, 2 * height, width, height))
             ];
             this.enemyTextureSheet.walkUp = [
                 new PIXI.Texture(tmpSheet, new PIXI.Rectangle(1 * width, 0 * height, width, height)),
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(1 * width, 1 * height, width, height))
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(1 * width, 1 * height, width, height)),
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(1 * width, 2 * height, width, height))
             ];
             this.enemyTextureSheet.walkRight = [
                 new PIXI.Texture(tmpSheet, new PIXI.Rectangle(3 * width, 0 * height, width, height)),
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(3 * width, 1 * height, width, height))
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(3 * width, 1 * height, width, height)),
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(3 * width, 2 * height, width, height))
             ];
             this.enemyTextureSheet.walkLeft = [
                 new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 0 * height, width, height)),
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 1 * height, width, height))
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 1 * height, width, height)),
+                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 2 * height, width, height))
             ];
         }
         //Next Wave Progress Bar Frames
