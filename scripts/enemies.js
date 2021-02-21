@@ -16,7 +16,7 @@ class Enemie extends PIXI.AnimatedSprite{
         this.x = posX;
         this.y = posY;
         this.type = type;
-        this.speed = this.type == "level1" ? 2 : 1;
+        this.speed = this.type == "level1" ? 3 : 1;
         this.colFkt = collisionFkt;
         this.hitBox = "rectangular";
         this.map = map;

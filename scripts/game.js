@@ -66,15 +66,6 @@ class Game{
         this.pressedKeys[e.keyCode] = false;
     }
 
-    loadLevel(levelnumber){
-        this.fetchLevel().then(data => this.level = data[levelnumber]);
-
-    }
-
-    error(){
-
-    }
-
     async fetchLevel(){
         let data = await fetch("scripts/levels.json")
         if (data.ok){
@@ -123,6 +114,15 @@ class Game{
                        .add("weapon","weapon.png")
                        .add("select","select/select.png")
                        .add("flare","flare.png")
+                       .add("l-1","levels/level-1.png")
+                       .add("l-2","levels/level-2.png")
+                       .add("l-3","levels/level-3.png")
+                       .add("l-4","levels/level-4.png")
+                       .add("l-5","levels/level-5.png")
+                       .add("l-6","levels/level-6.png")
+                       .add("l-7","levels/level-7.png")
+                       .add("l-8","levels/level-8.png")
+                       .add("l-9","levels/level-9.png")
                        .add("tiles","mapTiles.png");
         this.app.loader.onComplete.add(function(){that.creatingCombinedGraphics()})
         this.app.loader.load();
@@ -133,6 +133,9 @@ class Game{
         this.createTextureSheets();
     }
 
+    /**
+     * Creates the different screens for the game
+     */
     createScreens(){
         //Title Screen
         let fontsize = 10;
@@ -490,11 +493,23 @@ class Game{
         }
         //Level Select Screen
         {
-            let background = new PIXI.Graphics();
-            background.beginFill(0xA0A0A0);
-            background.drawRect(0, 0, 900, 600);
-            background.endFill();     
-            this.levelSelectScreen.addChild(background);
+            let backgrounds = [];
+            //Backgrounds
+            {
+                backgrounds[0] = new PIXI.Graphics();
+                backgrounds[0].beginFill(0xA0A0A0);
+                backgrounds[0].drawRect(0, 0, 900, 600);
+                backgrounds[0].endFill();     
+                this.levelSelectScreen.addChild(backgrounds[0]);
+
+                for(var i = 1; i <= 9; i++){
+                    let index = "l-" + i;
+                    backgrounds[i] = new PIXI.Sprite(this.app.loader.resources[index].texture);
+                    backgrounds[i].visible = false;
+                    this.levelSelectScreen.addChild(backgrounds[i]);
+                }
+            }
+            
             for(var i = 0; i < 9; i++){
                 let level = i + 1; //i starts by 0 levels by 1
                 let LSbutton = new PIXI.Sprite(new PIXI.Texture(this.app.loader.resources["levelBtns"].texture, new PIXI.Rectangle((i%3)*100,Math.floor(i/3)*100,100,100)));
@@ -503,6 +518,12 @@ class Game{
                 LSbutton.y = 230 + Math.floor(i / 3) * 140;
                 LSbutton.interactive = true;
                 LSbutton.buttonMode = true;
+                LSbutton.on("pointerover", () => {for(let i = 0; i < backgrounds.length;i++){this.levelSelectScreen.children[i].visible = false;} 
+                                                  this.levelSelectScreen.children[level].visible = true;})
+
+                LSbutton.on("pointerout", () => {for(let i = 0; i < backgrounds.length;i++){this.levelSelectScreen.children[i].visible = false;}
+                                                this.levelSelectScreen.children[0].visible = true;})
+
                 LSbutton.on("pointerup", () => {this.levelSelectScreen.visible = false; 
                                                 this.inizialiseGane(level)})
                 this.levelSelectScreen.addChild(LSbutton);
@@ -596,6 +617,9 @@ class Game{
         }
     }
 
+    /**
+     * Creates the Texture sheets for the animations
+     */
     createTextureSheets(){
         //Enemy Texture Sheet
         {
@@ -689,6 +713,10 @@ class Game{
         }
     }
 
+    /**
+     * Fetches the level, creates the map spawns the player and the first wave of enemies and starts the ticker
+     * @param {Number} level Which level should be loaded
+     */
     async inizialiseGane(level){
         let tmp = await this.fetchLevel();
         this.level = tmp[level-1];
@@ -716,25 +744,22 @@ class Game{
         this.gameMap.zIndex = 1;
         this.app.stage.addChild(this.gameMap);
 
-
-
-
         for(var i = 0; i < this.level.enemyCount; i++){
             this.enemies.push(new Enemie(this.level.enemySpawnLocation[i].x,this.level.enemySpawnLocation[i].y,this.enemyTextureSheet,"level1",this.gameMap, (object1,object2) => {return this.isColiding(object1,object2);}));
             this.app.stage.addChild(this.enemies[i]);
         }
-        
-
 
         this.player = new Player(this.level.playerSpawnLocation.x,this.level.playerSpawnLocation.y, this.playerTextureSheet,(object1,object2) => {return this.isColiding(object1,object2);});
         this.app.stage.addChild(this.player);
 
-
-        
-
         this.app.ticker.add(this.tickerFun);
     }
     
+    /**
+     * Gets two sprite objects and returns true or false if they are coliding
+     * @param {PIXI.Sprite} object1 
+     * @param {PIXI.Sprite} object2 
+     */
     isColiding(object1,object2){
         if(object1 != undefined && object2 != undefined){
             var rec1 = object1.getBounds();
@@ -749,6 +774,9 @@ class Game{
         }
     }
 
+    /**
+     * Resets all values and destroys all no longer needed objects
+     */
     cleanupGame(){
         var i = 0;
         for(i = 0; i < this.enemies.length; i++){
@@ -774,6 +802,10 @@ class Game{
         this.app.ticker.start()
     }
 
+    /**
+     * Pauses the game
+     * @param {String} condition The reason why the game is paused
+     */
     pauseGame(condition){
         this.app.ticker.remove(this.tickerFun);
         if(condition == "pause"){
