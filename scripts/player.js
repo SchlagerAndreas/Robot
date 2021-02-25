@@ -14,6 +14,11 @@ class Player extends PIXI.AnimatedSprite{
         this.play();
     }
 
+    /**
+     * Moves the player an checks if it hits a wall
+     * @param {Object} pressedKeys The keys which are pressed
+     * @param {PIXI.Container} map The map
+     */
     move(pressedKeys,map){
         var i = 0;
         //Moving Up
@@ -66,6 +71,10 @@ class Player extends PIXI.AnimatedSprite{
         }
     }
 
+    /**
+     * Takes in a direction and plays the according animation
+     * @param {String} direction Which direction the player is moving
+     */
     playWalkAnimation(direction){
         if(!this.playing){
             if(direction == "up"){

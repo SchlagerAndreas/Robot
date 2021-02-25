@@ -30,6 +30,10 @@ class Enemie extends PIXI.AnimatedSprite{
         this.play();
     }
 
+    /**
+     * Moves the enemy and checks if the enemy has hit the player
+     * @param {PIXI.Sprite} player The Player
+     */
     updateEnemy(player){
         if(this.duration == 0){
             if(this.isAtNodeCenter()){
@@ -99,6 +103,9 @@ class Enemie extends PIXI.AnimatedSprite{
         
     }
 
+    /**
+     * Takes the map as an array and build a graph from it
+     */
     createMapGraph(){
         this.mapGraph.vertexes = this.map.children;
         for(var i = 0; i < this.map.children.length; i++){
@@ -112,6 +119,11 @@ class Enemie extends PIXI.AnimatedSprite{
         }
     }
 
+    /**
+     * Takes in the coordinates and returns the node where they are
+     * @param {Number} x x-Coordinate
+     * @param {Number} y y-Coordinate
+     */
     getNode(x,y){
         let nodeX = Math.floor(x / 30);
         let nodeY = Math.floor(y / 30);
@@ -121,6 +133,9 @@ class Enemie extends PIXI.AnimatedSprite{
         return nodeIndex;
     }
 
+    /**
+     * Checks if the enemy is in the center of the node, if not it will be moved there
+     */
     isAtNodeCenter(){
         let node = this.getNode(this.x,this.y);
         let nodeCenterY = 15 + Math.floor(node / 30) * 30;
@@ -133,6 +148,10 @@ class Enemie extends PIXI.AnimatedSprite{
         return false;
     }
 
+    /**
+     * Finds the path to the player
+     * @param {PIXI.Sprite} player Player
+     */
     findDirection(player){
         let paths = [];
         let root = this.getNode(this.x,this.y);
@@ -165,6 +184,11 @@ class Enemie extends PIXI.AnimatedSprite{
     //     return false;
     // }
 
+    /**
+     * Takes in a start and end node an with the bfs-algorithm finds a bath from start to end
+     * @param {Number} start The start node where the enemy curretnly is
+     * @param {Number} end The end node where the player currently is
+     */
     bfs(start,end){
         let paths = [];
         let pathCnt = 0;
@@ -205,6 +229,10 @@ class Enemie extends PIXI.AnimatedSprite{
 
     }
 
+    /**
+     * Takes in a direction and plays the according animation
+     * @param {String} direction Which direction the enemy is moving
+     */
     playWalkAnimation(direction){
         if(!this.playing){
             if(direction == "up"){

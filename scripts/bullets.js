@@ -6,13 +6,18 @@ class Bullet extends PIXI.Sprite{
         this.x = posX;
         this.y = posY;
         this.zIndex = 2;
-        this.speed = 15;
+        this.speed = 12;
         this.clsFkt = collisionFkt;
         this.rotation = Math.PI + angle;
         this.movAngle = angle;
         this.hitBox = "rectangular";
     }
 
+    /**
+     * Moves the bullet and check if somthing, either a wall or an enemie is hit
+     * @param {Array} enemies Array of all enemies  
+     * @param {Pixi.Container} objects Game Map
+     */
     updateBullet(enemies,objects){
         this.y -= this.speed * Math.sin(this.movAngle);
         this.x -= this.speed * Math.cos(this.movAngle);

@@ -24,7 +24,7 @@ class Game{
         //Shoot/Reload mechanics variables
         this.isReloading = false;
         this.reloadingTime;
-        this.amonition = 100;
+        this.amonition = 50;
         //Screens
         this.titleScreen = new PIXI.Container();
         this.menuScreen = new PIXI.Container();
@@ -552,7 +552,7 @@ class Game{
             bullet.x = 0;
             bullet.y = 0;
             this.UI.addChild(bullet);
-            let text = new PIXI.Text('100/100',{fontFamily : 'Arial', fontSize: fontsize, fill : 0x0a0a0a, align : 'center'});
+            let text = new PIXI.Text('50/50',{fontFamily : 'Arial', fontSize: fontsize, fill : 0x0a0a0a, align : 'center'});
             text.height = 50;
             text.width = 150;
             text.resolution = 100;
@@ -788,14 +788,14 @@ class Game{
         for(i = 0; i < this.gameMap.children.length; i++){
             this.gameMap.children[i].destroy();
         }
-        this.amonition = 100;
+        this.amonition = 50;
         this.cnt = 0;
         this.UI.children[4].texture = this.progressBarFrames[3];
         this.UI.visible = false;
         this.enemies = [];
         this.bullets = [];
         this.isReloading = false;
-        this.UI.children[2].text = this.amonition + "/100";
+        this.UI.children[2].text = this.amonition + "/50";
         this.gameMap = new PIXI.Container();
         this.player.destroy();
         this.app.ticker.remove(this.tickerFun);
@@ -851,13 +851,13 @@ class Game{
             }
         }
         
-        if(this.enemies.length > 0){
-           for(var i = 0; i < this.enemies.length; i++){
-                if(this.enemies[i].updateEnemy(this.player)){
-                    this.pauseGame("gameover");
-                }
-            } 
-        }
+        // if(this.enemies.length > 0){
+        //    for(var i = 0; i < this.enemies.length; i++){
+        //         if(this.enemies[i].updateEnemy(this.player)){
+        //             this.pauseGame("gameover");
+        //         }
+        //     } 
+        // }
         
         this.UI.children[4].texture = this.progressBarFrames[Math.round(((300 - (this.cnt % 300)) / 100))];
         if(this.cnt % 300 == 0 && this.cnt != 0 && this.enemies.length < 50){
@@ -888,14 +888,14 @@ class Game{
                                      (object1,object2) => {return this.isColiding(object1,object2);}));
         this.app.stage.addChild(this.bullets[this.bullets.length - 1])
         this.amonition -= 1;
-        this.UI.children[2].text = this.amonition + "/100";
+        this.UI.children[2].text = this.amonition + "/50";
     }
 
     reload(){
         if(this.isReloading){
             this.isReloading = false;
-            this.amonition = 100;
-            this.UI.children[2].text = this.amonition + "/100";
+            this.amonition = 50;
+            this.UI.children[2].text = this.amonition + "/50";
         }
         else{
             this.isReloading = true;
