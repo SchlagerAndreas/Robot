@@ -851,13 +851,13 @@ class Game{
             }
         }
         
-        // if(this.enemies.length > 0){
-        //    for(var i = 0; i < this.enemies.length; i++){
-        //         if(this.enemies[i].updateEnemy(this.player)){
-        //             this.pauseGame("gameover");
-        //         }
-        //     } 
-        // }
+        if(this.enemies.length > 0){
+           for(var i = 0; i < this.enemies.length; i++){
+                if(this.enemies[i].updateEnemy(this.player)){
+                    this.pauseGame("gameover");
+                }
+            } 
+        }
         
         this.UI.children[4].texture = this.progressBarFrames[Math.round(((300 - (this.cnt % 300)) / 100))];
         if(this.cnt % 300 == 0 && this.cnt != 0 && this.enemies.length < 50){
