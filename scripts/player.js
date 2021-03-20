@@ -21,14 +21,33 @@ class Player extends PIXI.AnimatedSprite{
      */
     move(pressedKeys,map){
         var i = 0;
+        let tile = this.getTile(this.x,this.y);
+        let upLeftTile = tile - 30 - 1;
+        let downLeftTile = tile + 30 - 1;
+        let leftTile = tile - 1;
         //Moving Up
         if(pressedKeys["87"]){
             this.y -= this.speed;
             this.playWalkAnimation("up");
-            for(i = 0; i < map.children.length; i++){
-                if(map.children[i].isSolid){
-                    if(this.colFkt(map.children[i],this)){
-                        this.y = map.children[i].y + 28;
+            this.y -= this.speed;
+            for(i = 0; i < 3; i++){
+                if(map.children[upLeftTile+i].isSolid){
+                    if(this.colFkt(map.children[upLeftTile+i],this)){
+                        this.y = map.children[upLeftTile+i].y + 28;
+                    }
+                }
+            }
+            for(i = 0; i < 3; i++){
+                if(map.children[downLeftTile+i].isSolid){
+                    if(this.colFkt(map.children[downLeftTile+i],this)){
+                        this.y = map.children[downLeftTile+i].y + 28;
+                    }
+                }
+            }
+            for(i = 0; i < 3; i++){
+                if(map.children[leftTile+i].isSolid){
+                    if(this.colFkt(map.children[leftTile+i],this)){
+                        this.y = map.children[leftTile+i].y + 28;
                     }
                 }
             }
@@ -37,10 +56,24 @@ class Player extends PIXI.AnimatedSprite{
         if(pressedKeys["83"]){
             this.y += this.speed;
             this.playWalkAnimation("down");
-            for(i = 0; i < map.children.length; i++){
-                if(map.children[i].isSolid){
-                    if(this.colFkt(map.children[i],this)){
-                        this.y = map.children[i].y - 28;
+            for(i = 0; i < 3; i++){
+                if(map.children[upLeftTile+i].isSolid){
+                    if(this.colFkt(map.children[upLeftTile+i],this)){
+                        this.y = map.children[upLeftTile+i].y - 28;
+                    }
+                }
+            }
+            for(i = 0; i < 3; i++){
+                if(map.children[downLeftTile+i].isSolid){
+                    if(this.colFkt(map.children[downLeftTile+i],this)){
+                        this.y = map.children[downLeftTile+i].y - 28;
+                    }
+                }
+            }
+            for(i = 0; i < 3; i++){
+                if(map.children[leftTile+i].isSolid){
+                    if(this.colFkt(map.children[leftTile+i],this)){
+                        this.y = map.children[leftTile+i].y - 28;
                     }
                 }
             }
@@ -49,10 +82,24 @@ class Player extends PIXI.AnimatedSprite{
         if(pressedKeys["68"]){
             this.x += this.speed;
             this.playWalkAnimation("right");
-            for(i = 0; i < map.children.length; i++){
-                if(map.children[i].isSolid){
-                    if(this.colFkt(map.children[i],this)){
-                        this.x = map.children[i].x - 28;
+            for(i = 0; i < 3; i++){
+                if(map.children[upLeftTile+i].isSolid){
+                    if(this.colFkt(map.children[upLeftTile+i],this)){
+                        this.x = map.children[upLeftTile+i].x - 28;
+                    }
+                }
+            }
+            for(i = 0; i < 3; i++){
+                if(map.children[downLeftTile+i].isSolid){
+                    if(this.colFkt(map.children[downLeftTile+i],this)){
+                        this.x = map.children[downLeftTile+i].x - 28;
+                    }
+                }
+            }
+            for(i = 0; i < 3; i++){
+                if(map.children[leftTile+i].isSolid){
+                    if(this.colFkt(map.children[leftTile+i],this)){
+                        this.x = map.children[leftTile+i].x - 28;
                     }
                 }
             }
@@ -61,16 +108,43 @@ class Player extends PIXI.AnimatedSprite{
         if(pressedKeys["65"]){
             this.x -= this.speed;
             this.playWalkAnimation("left");
-            for(i = 0; i < map.children.length; i++){
-                if(map.children[i].isSolid){
-                    if(this.colFkt(map.children[i],this)){
-                        this.x = map.children[i].x + 28;
+            for(i = 0; i < 3; i++){
+                if(map.children[upLeftTile+i].isSolid){
+                    if(this.colFkt(map.children[upLeftTile+i],this)){
+                        this.x = map.children[upLeftTile+i].x + 28;
+                    }
+                }
+            }
+            for(i = 0; i < 3; i++){
+                if(map.children[downLeftTile+i].isSolid){
+                    if(this.colFkt(map.children[downLeftTile+i],this)){
+                        this.x = map.children[downLeftTile+i].x + 28;
+                    }
+                }
+            }
+            for(i = 0; i < 3; i++){
+                if(map.children[leftTile+i].isSolid){
+                    if(this.colFkt(map.children[leftTile+i],this)){
+                        this.x = map.children[leftTile+i].x + 28;
                     }
                 }
             }
         }
     }
 
+    /**
+     * Gets the x and y coordinate of a sprite and calculates the index of the maptile its in
+     * @param {Number} x x-coordinate of the sprite
+     * @param {Number} y y-coordinate of the sprite
+     */
+    getTile(x,y){
+        let tileX = Math.floor(x / 30);
+        let tileY = Math.floor(y / 30);
+        tileY = tileY == 30 ? 29 : tileY;
+        tileX = tileX == 30 ? 29 : tileX;
+        let tileIndex = tileY * 30 + tileX;
+        return tileIndex;
+    }
     /**
      * Takes in a direction and plays the according animation
      * @param {String} direction Which direction the player is moving
