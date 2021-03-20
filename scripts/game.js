@@ -742,6 +742,7 @@ class Game{
         this.UI.visible = true;
         this.gameMap.visible = true;
         this.gameMap.zIndex = 1;
+        this.gameMap.cacheAsBitmap = true;
         this.app.stage.addChild(this.gameMap);
 
         for(var i = 0; i < this.level.enemyCount; i++){
@@ -837,13 +838,16 @@ class Game{
                 let tmp = this.bullets[i].updateBullet(this.enemies,this.gameMap);
                 if(tmp[0] == "f"){
                     if(tmp[1] == "o"){
+                        this.bullets[i].destroy();
                         this.app.stage.removeChild(this.bullets[i]);
                         this.bullets.splice(i,1);
                     }
                     else if(tmp[1] == "e"){
                         this.score += 10;
+                        this.bullets[i].destroy();
                         this.app.stage.removeChild(this.bullets[i]);
                         this.bullets.splice(i,1);
+                        this.enemies[tmp[2]].destroy();
                         this.app.stage.removeChild(this.enemies[tmp[2]]);
                         this.enemies.splice(tmp[2],1);
                     }
