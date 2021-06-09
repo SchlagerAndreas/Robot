@@ -180,32 +180,13 @@ class Game{
             text.y = 25;
             this.menuScreen.addChild(text);  
             
-            text =  new PIXI.Text('FPS',{fontFamily : 'Arial', fontSize: fontsize, fill : 0x0a0a0a, align : 'center'});
-            text.height = 40;
-            text.width = 80;
-            text.resolution = 100;
-            text.anchor.set(0);
-            text.x = 350;
-            text.y = 150;
-            this.menuScreen.addChild(text);
-
-            let button = new PIXI.Sprite(this.app.loader.resources["select"].texture);
-            button.anchor.set(0);
-            button.x = 450;
-            button.y = 150;
-            button.interactive = true;
-            button.buttonMode = true;
-            button.on("pointerup",()=>{this.menuScreen.children[7].visible = !this.menuScreen.children[7].visible;})
-            this.menuScreen.addChild(button);
-            
-            button = new PIXI.Sprite(this.app.loader.resources["playBtn"].texture);
+            let button = new PIXI.Sprite(this.app.loader.resources["playBtn"].texture);
             button.anchor.set(0);
             button.x = 350;
             button.y = 225;
             button.interactive = true;
             button.buttonMode = true;
-            button.on("pointerup",()=>{this.menuScreen.children[7].visible = false;
-                                       this.menuScreen.visible = false; 
+            button.on("pointerup",()=>{this.menuScreen.visible = false; 
                                        this.app.ticker.add(this.tickerFun);})
             this.menuScreen.addChild(button);
 
@@ -216,7 +197,6 @@ class Game{
             button.interactive = true;
             button.buttonMode = true;
             button.on("pointerup",()=>{this.helpScreen.lastScreen = "pauseScreen";
-                                       this.menuScreen.children[7].visible = false;
                                        this.menuScreen.visible = false;
                                        this.helpScreen.visible = true;})
             this.menuScreen.addChild(button);
@@ -227,136 +207,12 @@ class Game{
             button.y = 475;
             button.interactive = true;
             button.buttonMode = true;
-            button.on("pointerup",()=>{this.menuScreen.children[7].visible = false;
-                                       this.FPSDisplay.visible = false;
+            button.on("pointerup",()=>{this.FPSDisplay.visible = false;
                                        this.menuScreen.visible = false;
                                        this.gameMap.visible = false;
                                        this.titleScreen.visible = true;  
                                        this.cleanupGame()})
             this.menuScreen.addChild(button);
-
-            //Select
-            {
-                let textHeight = 30;
-                let textWidth = 60;
-                let select = new PIXI.Container();
-
-                let button = new PIXI.Graphics();
-                button.beginFill(0xabcdef);
-                button.drawRect(0, 0, 100, 40);
-                button.endFill();
-                button.x = 0;
-                button.y = 0;
-                button.interactive = true;
-                button.buttonMode = true;
-                button.on("pointerup",()=>{this.FPSDisplay.visible = false;
-                                           this.menuScreen.children[7].visible = false;})
-                select.addChild(button);
-                let text = new PIXI.Text('None',{fontFamily : 'Arial', fontSize: fontsize, fill : 0x0a0a0a, align : 'center'});
-                text.height = textHeight;
-                text.width = textWidth;
-                text.resolution = 100;
-                text.anchor.set(0);
-                text.x = 20;
-                text.y = 0;
-                select.addChild(text);  
-
-                button = new PIXI.Graphics();
-                button.beginFill(0xabcdef);
-                button.drawRect(0, 0, 100, 40);
-                button.endFill();
-                button.x = 0;
-                button.y = 40;
-                button.interactive = true;
-                button.buttonMode = true;
-                button.on("pointerup",()=>{this.FPSDisplay.visible = true;
-                                           this.FPSDisplay.x = 860;
-                                           this.FPSDisplay.y = 0;
-                                           this.menuScreen.children[7].visible = false;})
-                select.addChild(button);
-                text = new PIXI.Text('Top-Right',{fontFamily : 'Arial', fontSize: fontsize, fill : 0x0a0a0a, align : 'center'});
-                text.height = textHeight;
-                text.width = textWidth;
-                text.resolution = 100;
-                text.anchor.set(0);
-                text.x = 20;
-                text.y = 40;
-                select.addChild(text);
-
-                button = new PIXI.Graphics();
-                button.beginFill(0xabcdef);
-                button.drawRect(0, 0, 100, 40);
-                button.endFill();
-                button.x = 0;
-                button.y = 80;
-                button.interactive = true;
-                button.buttonMode = true;
-                button.on("pointerup",()=>{this.FPSDisplay.visible = true;
-                                           this.FPSDisplay.x = 0;
-                                           this.FPSDisplay.y = 0;
-                                           this.menuScreen.children[7].visible = false;})
-                select.addChild(button);
-                text = new PIXI.Text('Top-Left',{fontFamily : 'Arial', fontSize: fontsize, fill : 0x0a0a0a, align : 'center'});
-                text.height = textHeight;
-                text.width = textWidth;
-                text.resolution = 100;
-                text.anchor.set(0);
-                text.x = 20;
-                text.y = 80;
-                select.addChild(text);
-
-                button = new PIXI.Graphics();
-                button.beginFill(0xabcdef);
-                button.drawRect(0, 0, 100, 40);
-                button.endFill();
-                button.x = 0;
-                button.y = 120;
-                button.interactive = true;
-                button.buttonMode = true;
-                button.on("pointerup",()=>{this.FPSDisplay.visible = true;
-                                           this.FPSDisplay.x = 860;
-                                           this.FPSDisplay.y = 580;
-                                           this.menuScreen.children[7].visible = false;})
-                select.addChild(button);
-                text = new PIXI.Text('Bottom-Right',{fontFamily : 'Arial', fontSize: fontsize, fill : 0x0a0a0a, align : 'center'});
-                text.height = textHeight;
-                text.width = textWidth;
-                text.resolution = 100;
-                text.anchor.set(0);
-                text.x = 20;
-                text.y = 120;
-                select.addChild(text);
-
-                button = new PIXI.Graphics();
-                button.beginFill(0xabcdef);
-                button.drawRect(0, 0, 100, 40);
-                button.endFill();
-                button.x = 0;
-                button.y = 160;
-                button.interactive = true;
-                button.buttonMode = true;
-                button.on("pointerup",()=>{this.FPSDisplay.visible = true;
-                                           this.FPSDisplay.x = 0;
-                                           this.FPSDisplay.y = 580;
-                                           this.menuScreen.children[7].visible = false;})
-                select.addChild(button);
-                text = new PIXI.Text('Bottom-Left',{fontFamily : 'Arial', fontSize: fontsize, fill : 0x0a0a0a, align : 'center'});
-                text.height = textHeight;
-                text.width = textWidth;
-                text.resolution = 100;
-                text.anchor.set(0);
-                text.x = 20;
-                text.y = 160;
-                select.addChild(text);
-
-
-                select.x = 450;
-                select.y = 190;
-                select.width = 100;
-                select.height = 200;
-                select.visible = false;
-                this.menuScreen.addChild(select)
-            }
             
             this.menuScreen.zIndex = 997;
             this.menuScreen.visible = false;
@@ -877,7 +733,7 @@ class Game{
         if(this.score >= 1000){
             this.UI.children[5].width = 250;
         }
-        this.FPSDisplay.children[1].text = "FPS: " + Math.round(this.app.ticker.FPS);
+        document.getElementById("FPS").innerHTML = "FPS: " + Math.round(this.app.ticker.FPS);
         this.cnt++;
     }
 
