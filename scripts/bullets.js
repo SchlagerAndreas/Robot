@@ -11,6 +11,7 @@ class Bullet extends PIXI.Sprite{
         this.rotation = Math.PI + angle;
         this.movAngle = angle;
         this.hitBox = "rectangular";
+        this.damage = 5;
     }
 
     /**

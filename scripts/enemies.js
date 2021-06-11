@@ -6,13 +6,10 @@ class Graph{
 }
 
 
-class Enemie extends PIXI.AnimatedSprite{
+class Enemie extends PIXI.Container{
     constructor(posX,posY,textureSheet,type,map,collisionFkt){
-        super(textureSheet.standDown)
+        super()
         this.textureSheet = textureSheet;
-        this.anchor.set(0.5)
-        this.animationSpeed = 0.5;
-        this.loop = false;
         this.x = posX;
         this.y = posY;
         this.type = type;
@@ -27,7 +24,51 @@ class Enemie extends PIXI.AnimatedSprite{
         this.cnt = 0;
         this.direction = 0;
         this.duration = 0;
-        this.play();
+        this.texture;
+        this.maxHP = 20;
+        this.curHP = 20;
+        this.createEnemy();
+    }
+
+    createEnemy(){
+        this.texture = new PIXI.AnimatedSprite(this.textureSheet.standDown);
+        this.texture.anchor.set(0.5);
+        this.texture.animationSpeed = 0.5;
+        this.texture.loop = false;
+        this.addChild(this.texture);
+        this.texture.play();
+        
+        let redBar = new PIXI.Graphics();
+        redBar.beginFill(0xFF0000);
+        redBar.drawRect(-12,-20,25,5);
+        redBar.endFill();
+        this.addChild(redBar);
+
+        let greenBar = new PIXI.Graphics();
+        greenBar.beginFill(0x00FF00);
+        greenBar.drawRect(-12,-20,25,5);
+        greenBar.endFill();
+        this.addChild(greenBar);
+        this.updateHpBar();
+    }
+
+    updateHpBar(){
+        let hpBarWidth = Math.round((this.curHP / this.maxHP) * 25);
+        this.children[2].destroy();
+        let hpBar = new PIXI.Graphics();
+        hpBar.beginFill(0x00FF00);
+        hpBar.drawRect(-12,-20,hpBarWidth,5);
+        hpBar.endFill();
+        this.addChild(hpBar);
+    }
+
+    gotHit(damage){
+        this.curHP -= damage;
+        this.updateHpBar();
+        if(this.curHP <= 0){
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -53,7 +94,7 @@ class Enemie extends PIXI.AnimatedSprite{
                 this.playWalkAnimation("up");
                 for(i = 0; i < this.map.children.length; i++){
                     if(this.map.children[i].isSolid){
-                        if(this.colFkt(this,this.map.children[i])){
+                        if(this.colFkt(this.texture,this.map.children[i])){
                             this.x = this.map.children[i].x + 28;
                         }
                     }
@@ -64,7 +105,7 @@ class Enemie extends PIXI.AnimatedSprite{
                 this.playWalkAnimation("down");
                 for(i = 0; i < this.map.children.length; i++){
                     if(this.map.children[i].isSolid){
-                        if(this.colFkt(this,this.map.children[i])){
+                        if(this.colFkt(this.texture,this.map.children[i])){
                             this.x = this.map.children[i].x - 28;
                         }
                     }
@@ -75,7 +116,7 @@ class Enemie extends PIXI.AnimatedSprite{
                 this.playWalkAnimation("left");
                 for(i = 0; i < this.map.children.length; i++){
                     if(this.map.children[i].isSolid){
-                        if(this.colFkt(this,this.map.children[i])){
+                        if(this.colFkt(this.texture,this.map.children[i])){
                             this.y = this.map.children[i].y + 28;
                         }
                     }
@@ -86,7 +127,7 @@ class Enemie extends PIXI.AnimatedSprite{
                 this.playWalkAnimation("right");
                 for(i = 0; i < this.map.children.length; i++){
                     if(this.map.children[i].isSolid){
-                        if(this.colFkt(this,this.map.children[i])){
+                        if(this.colFkt(this.texture,this.map.children[i])){
                             this.y = this.map.children[i].y - 28;
                         }
                     }
@@ -234,26 +275,26 @@ class Enemie extends PIXI.AnimatedSprite{
      * @param {String} direction Which direction the enemy is moving
      */
     playWalkAnimation(direction){
-        if(!this.playing){
+        if(!this.texture.playing){
             if(direction == "up"){
-                this.textures = this.textureSheet.walkLeft;
-                this.loop = false;
-                this.play();
+                this.texture.textures = this.textureSheet.walkLeft;
+                this.texture.loop = false;
+                this.texture.play();
             }
             else if(direction == "down"){
-                this.textures = this.textureSheet.walkRight;
-                this.loop = false;
-                this.play();
+                this.texture.textures = this.textureSheet.walkRight;
+                this.texture.loop = false;
+                this.texture.play();
             }
             else if(direction == "right"){
                 this.textures = this.textureSheet.walkDown;
-                this.loop = false;
-                this.play();
+                this.texture.loop = false;
+                this.texture.play();
             }
             else if(direction == "left"){
-                this.textures = this.textureSheet.walkUp;
-                this.loop = false;
-                this.play();
+                this.texture.textures = this.textureSheet.walkUp;
+                this.texture.loop = false;
+                this.texture.play();
             }
         }
     }

@@ -699,13 +699,16 @@ class Game{
                         this.bullets.splice(i,1);
                     }
                     else if(tmp[1] == "e"){
-                        this.score += 10;
+                        let dmg = this.bullets[i].damage;
                         this.bullets[i].destroy();
                         this.app.stage.removeChild(this.bullets[i]);
                         this.bullets.splice(i,1);
-                        this.enemies[tmp[2]].destroy();
-                        this.app.stage.removeChild(this.enemies[tmp[2]]);
-                        this.enemies.splice(tmp[2],1);
+                        if(this.enemies[tmp[2]].gotHit(dmg)){
+                            this.score += 10;
+                            this.enemies[tmp[2]].destroy();
+                            this.app.stage.removeChild(this.enemies[tmp[2]]);
+                            this.enemies.splice(tmp[2],1);
+                        }
                     }
                 }
             }
