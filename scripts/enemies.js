@@ -25,8 +25,8 @@ class Enemie extends PIXI.Container{
         this.direction = 0;
         this.duration = 0;
         this.texture;
-        this.maxHP = 20;
-        this.curHP = 20;
+        this.maxHP = 15;
+        this.curHP = this.maxHP;
         this.createEnemy();
     }
 
@@ -42,19 +42,21 @@ class Enemie extends PIXI.Container{
         redBar.beginFill(0xFF0000);
         redBar.drawRect(-12,-20,25,5);
         redBar.endFill();
+        redBar.visible = false;
         this.addChild(redBar);
 
         let greenBar = new PIXI.Graphics();
         greenBar.beginFill(0x00FF00);
         greenBar.drawRect(-12,-20,25,5);
         greenBar.endFill();
+        greenBar.visible = false;
         this.addChild(greenBar);
-        this.updateHpBar();
     }
 
     updateHpBar(){
         let hpBarWidth = Math.round((this.curHP / this.maxHP) * 25);
         this.children[2].destroy();
+        this.children[1].visible = true;
         let hpBar = new PIXI.Graphics();
         hpBar.beginFill(0x00FF00);
         hpBar.drawRect(-12,-20,hpBarWidth,5);
