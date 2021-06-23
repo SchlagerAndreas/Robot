@@ -1,3 +1,82 @@
+class EnemyTexture extends PIXI.AnimatedSprite{
+    constructor(textureSheet){
+        super(textureSheet.standDown);
+        this.textureSheet = textureSheet;
+        this.anchor.set(0.5);
+        this.animationSpeed = 0.5;
+        this.loop = false;
+        this.play();
+    }
+
+    /**
+     * Takes in a direction and plays the according animation
+     * @param {String} direction Which direction the enemy is moving
+     */
+    playWalkAnimation(direction){
+        if(!this.playing){
+            if(direction == "up"){
+                this.textures = this.textureSheet.walkLeft;
+                this.loop = false;
+                this.play();
+            }
+            else if(direction == "down"){
+                this.textures = this.textureSheet.walkRight;
+                this.loop = false;
+                this.play();
+            }
+            else if(direction == "right"){
+                this.textures = this.textureSheet.walkDown;
+                this.loop = false;
+                this.play();
+            }
+            else if(direction == "left"){
+                this.textures = this.textureSheet.walkUp;
+                this.loop = false;
+                this.play();
+            }
+        }
+    }
+}
+
+class HPBar extends PIXI.Container{
+    constructor(maxHP){
+        super();
+        this.mHP = maxHP;
+
+        let blackBar = new PIXI.Graphics();
+        blackBar.beginFill(0x000000);
+        blackBar.drawRect(-2,-2,29,9);
+        blackBar.endFill();
+        blackBar.visible = false;
+        this.addChild(blackBar);
+
+        let redBar = new PIXI.Graphics();
+        redBar.beginFill(0xFF0000);
+        redBar.drawRect(0,0,25,5);
+        redBar.endFill();
+        redBar.visible = false;
+        this.addChild(redBar);
+
+        let greenBar = new PIXI.Graphics();
+        greenBar.beginFill(0x00FF00);
+        greenBar.drawRect(0,0,25,5);
+        greenBar.endFill();
+        greenBar.visible = false;
+        this.addChild(greenBar);
+    }
+
+    updateHpBar(currentHP){
+        let hpBarWidth = Math.round((currentHP / this.mHP) * 25);
+        this.children[2].destroy();
+        this.children[0].visible =  this.children[1].visible = true;
+        let greenBar = new PIXI.Graphics();
+        greenBar.beginFill(0x00FF00);
+        greenBar.drawRect(0,0,hpBarWidth,5);
+        greenBar.endFill();
+        this.addChild(greenBar);
+    }
+}
+
 class Graph{
     constructor(){
         this.vertexes = {};
@@ -7,15 +86,13 @@ class Graph{
 
 
 class Enemie extends PIXI.Container{
-    constructor(posX,posY,textureSheet,type,map,collisionFkt){
+    constructor(posX,posY,textureSheet,enemyStats,map,collisionFkt){
         super()
         this.textureSheet = textureSheet;
         this.x = posX;
         this.y = posY;
-        this.type = type;
-        this.speed = this.type == "level1" ? 3 : 1;
+        this.stats = enemyStats;
         this.colFkt = collisionFkt;
-        this.hitBox = "rectangular";
         this.map = map;
         this.zIndex = 3;
         this.mapGraph = new Graph;
@@ -25,49 +102,21 @@ class Enemie extends PIXI.Container{
         this.direction = 0;
         this.duration = 0;
         this.texture;
-        this.maxHP = 15;
-        this.curHP = this.maxHP;
-        this.createEnemy();
-    }
+        this.hpBar;
 
-    createEnemy(){
-        this.texture = new PIXI.AnimatedSprite(this.textureSheet.standDown);
-        this.texture.anchor.set(0.5);
-        this.texture.animationSpeed = 0.5;
-        this.texture.loop = false;
+        this.texture = new EnemyTexture(this.textureSheet);
         this.addChild(this.texture);
-        this.texture.play();
         
-        let redBar = new PIXI.Graphics();
-        redBar.beginFill(0xFF0000);
-        redBar.drawRect(-12,-20,25,5);
-        redBar.endFill();
-        redBar.visible = false;
-        this.addChild(redBar);
-
-        let greenBar = new PIXI.Graphics();
-        greenBar.beginFill(0x00FF00);
-        greenBar.drawRect(-12,-20,25,5);
-        greenBar.endFill();
-        greenBar.visible = false;
-        this.addChild(greenBar);
-    }
-
-    updateHpBar(){
-        let hpBarWidth = Math.round((this.curHP / this.maxHP) * 25);
-        this.children[2].destroy();
-        this.children[1].visible = true;
-        let hpBar = new PIXI.Graphics();
-        hpBar.beginFill(0x00FF00);
-        hpBar.drawRect(-12,-20,hpBarWidth,5);
-        hpBar.endFill();
-        this.addChild(hpBar);
+        this.hpBar = new HPBar(this.stats.hp);
+        this.hpBar.x = -12;
+        this.hpBar.y = -20;
+        this.addChild(this.hpBar);
     }
 
     gotHit(damage){
-        this.curHP -= damage;
-        this.updateHpBar();
-        if(this.curHP <= 0){
+        this.stats.hp -= damage;
+        this.hpBar.updateHpBar(this.stats.hp);
+        if(this.stats.hp <= 0){
             return true;
         }
         return false;
@@ -82,7 +131,7 @@ class Enemie extends PIXI.Container{
             if(this.isAtNodeCenter()){
                 this.findDirection(player);
                 this.direction = this.currentPath[this.cnt] - this.currentPath[this.cnt + 1];
-                this.duration = Math.round(30 / this.speed);
+                this.duration = Math.round(30 / this.stats.speed);
             }
             else{
                 this.direction = 0;
@@ -92,8 +141,8 @@ class Enemie extends PIXI.Container{
         if(this.direction != 0){
             var i = 0;
             if(this.direction == 1){
-                this.x -= this.speed;
-                this.playWalkAnimation("up");
+                this.x -= this.stats.speed;
+                this.texture.playWalkAnimation("up");
                 for(i = 0; i < this.map.children.length; i++){
                     if(this.map.children[i].isSolid){
                         if(this.colFkt(this.texture,this.map.children[i])){
@@ -103,8 +152,8 @@ class Enemie extends PIXI.Container{
                 }
             }
             else if(this.direction == -1){
-                this.x += this.speed;
-                this.playWalkAnimation("down");
+                this.x += this.stats.speed;
+                this.texture.playWalkAnimation("down");
                 for(i = 0; i < this.map.children.length; i++){
                     if(this.map.children[i].isSolid){
                         if(this.colFkt(this.texture,this.map.children[i])){
@@ -114,8 +163,8 @@ class Enemie extends PIXI.Container{
                 }
             }
             else if(this.direction == 30){
-                this.y -= this.speed;
-                this.playWalkAnimation("left");
+                this.y -= this.stats.speed;
+                this.texture.playWalkAnimation("left");
                 for(i = 0; i < this.map.children.length; i++){
                     if(this.map.children[i].isSolid){
                         if(this.colFkt(this.texture,this.map.children[i])){
@@ -125,8 +174,8 @@ class Enemie extends PIXI.Container{
                 }
             }
             else if(this.direction == -30){
-                this.y += this.speed;
-                this.playWalkAnimation("right");
+                this.y += this.stats.speed;
+                this.texture.playWalkAnimation("right");
                 for(i = 0; i < this.map.children.length; i++){
                     if(this.map.children[i].isSolid){
                         if(this.colFkt(this.texture,this.map.children[i])){
@@ -138,7 +187,6 @@ class Enemie extends PIXI.Container{
             this.duration--;
         }
         
-
         if(this.colFkt(this,player)){
             return true;
         }
@@ -208,25 +256,6 @@ class Enemie extends PIXI.Container{
         this.currentPath = paths[tmp]
     }
 
-    // dfs(start,end,explored = new Set()){
-    //     explored.add(start);
-    //     this.path.push(start);
-    //     var connections = this.mapGraph.edges[start];
-    //     for(var i = 0; i < connections.length; i++){
-    //         if(connections[i] == end){
-    //             this.path.push(connections[i]);
-    //             return true;
-    //         }
-    //         if(!explored.has(connections[i])){
-    //             if(this.dfs(connections[i],end,explored)){
-    //                 return true;
-    //             }
-    //         }
-    //     }
-    //     this.path.pop();
-    //     return false;
-    // }
-
     /**
      * Takes in a start and end node an with the bfs-algorithm finds a bath from start to end
      * @param {Number} start The start node where the enemy curretnly is
@@ -270,34 +299,5 @@ class Enemie extends PIXI.Container{
         path.reverse();
         return path;
 
-    }
-
-    /**
-     * Takes in a direction and plays the according animation
-     * @param {String} direction Which direction the enemy is moving
-     */
-    playWalkAnimation(direction){
-        if(!this.texture.playing){
-            if(direction == "up"){
-                this.texture.textures = this.textureSheet.walkLeft;
-                this.texture.loop = false;
-                this.texture.play();
-            }
-            else if(direction == "down"){
-                this.texture.textures = this.textureSheet.walkRight;
-                this.texture.loop = false;
-                this.texture.play();
-            }
-            else if(direction == "right"){
-                this.textures = this.textureSheet.walkDown;
-                this.texture.loop = false;
-                this.texture.play();
-            }
-            else if(direction == "left"){
-                this.texture.textures = this.textureSheet.walkUp;
-                this.texture.loop = false;
-                this.texture.play();
-            }
-        }
     }
 }
