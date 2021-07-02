@@ -44,7 +44,7 @@ class Game{
         this.player;
         //texture Sheets
         this.progressBarFrames = [];
-        this.enemyTextureSheet = {};
+        this.enemyTextureSheets = [];
         this.playerTextureSheet = {};
 
         this.cnt = 0;
@@ -99,7 +99,8 @@ class Game{
                        .add("bullet","bullet.png")
                        .add("background","field.png")
                        .add("wall","wall.png")
-                       .add("enemy","robot.png")
+                       .add("enemy0","robot.png")
+                       .add("enemy1","robot-l2.png")
                        .add("playBtn","buttons/play-button.png")
                        .add("extBtn","buttons/exit-button.png")
                        .add("levelBtns","buttons/level-select-buttons.png")
@@ -479,42 +480,47 @@ class Game{
     createTextureSheets(){
         //Enemy Texture Sheet
         {
-            let tmpSheet = new PIXI.BaseTexture.from(this.app.loader.resources["enemy"].url);
-            let width = 25;
-            let height = 25;
-            this.enemyTextureSheet.standDown = [
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(2 * width, 1 * height, width, height))
-            ];
-            this.enemyTextureSheet.standUp = [
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(1 * width, 1 * height, width, height))
-            ];
-            this.enemyTextureSheet.standRight = [
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(3 * width, 1 * height, width, height))
-            ];
-            this.enemyTextureSheet.standLeft = [
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 1 * height, width, height))
-            ];
-
-            this.enemyTextureSheet.walkDown = [
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(2 * width, 0 * height, width, height)),
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(2 * width, 1 * height, width, height)),
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(2 * width, 2 * height, width, height))
-            ];
-            this.enemyTextureSheet.walkUp = [
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(1 * width, 0 * height, width, height)),
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(1 * width, 1 * height, width, height)),
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(1 * width, 2 * height, width, height))
-            ];
-            this.enemyTextureSheet.walkRight = [
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(3 * width, 0 * height, width, height)),
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(3 * width, 1 * height, width, height)),
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(3 * width, 2 * height, width, height))
-            ];
-            this.enemyTextureSheet.walkLeft = [
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 0 * height, width, height)),
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 1 * height, width, height)),
-                new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 2 * height, width, height))
-            ];
+            let maxLevel = 1;
+            for(let level = 0; level <= maxLevel; level++){
+                let resourceID = "enemy" + level;
+                let tmpSheet = new PIXI.BaseTexture.from(this.app.loader.resources[resourceID].url);
+                let width = 25;
+                let height = 25;
+                this.enemyTextureSheets[level] = {};
+                this.enemyTextureSheets[level].standDown = [
+                    new PIXI.Texture(tmpSheet, new PIXI.Rectangle(2 * width, 1 * height, width, height))
+                ];
+                this.enemyTextureSheets[level].standUp = [
+                    new PIXI.Texture(tmpSheet, new PIXI.Rectangle(1 * width, 1 * height, width, height))
+                ];
+                this.enemyTextureSheets[level].standRight = [
+                    new PIXI.Texture(tmpSheet, new PIXI.Rectangle(3 * width, 1 * height, width, height))
+                ];
+                this.enemyTextureSheets[level].standLeft = [
+                    new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 1 * height, width, height))
+                ];
+    
+                this.enemyTextureSheets[level].walkDown = [
+                    new PIXI.Texture(tmpSheet, new PIXI.Rectangle(2 * width, 0 * height, width, height)),
+                    new PIXI.Texture(tmpSheet, new PIXI.Rectangle(2 * width, 1 * height, width, height)),
+                    new PIXI.Texture(tmpSheet, new PIXI.Rectangle(2 * width, 2 * height, width, height))
+                ];
+                this.enemyTextureSheets[level].walkUp = [
+                    new PIXI.Texture(tmpSheet, new PIXI.Rectangle(1 * width, 0 * height, width, height)),
+                    new PIXI.Texture(tmpSheet, new PIXI.Rectangle(1 * width, 1 * height, width, height)),
+                    new PIXI.Texture(tmpSheet, new PIXI.Rectangle(1 * width, 2 * height, width, height))
+                ];
+                this.enemyTextureSheets[level].walkRight = [
+                    new PIXI.Texture(tmpSheet, new PIXI.Rectangle(3 * width, 0 * height, width, height)),
+                    new PIXI.Texture(tmpSheet, new PIXI.Rectangle(3 * width, 1 * height, width, height)),
+                    new PIXI.Texture(tmpSheet, new PIXI.Rectangle(3 * width, 2 * height, width, height))
+                ];
+                this.enemyTextureSheets[level].walkLeft = [
+                    new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 0 * height, width, height)),
+                    new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 1 * height, width, height)),
+                    new PIXI.Texture(tmpSheet, new PIXI.Rectangle(0 * width, 2 * height, width, height))
+                ];
+            }
         }
         //Player Texture Sheet
         {
@@ -602,7 +608,7 @@ class Game{
         this.app.stage.addChild(this.gameMap);
 
         for(var i = 0; i < this.level.enemyCount; i++){
-            this.enemies.push(new Enemie(this.level.enemySpawnLocation[i].x,this.level.enemySpawnLocation[i].y,this.enemyTextureSheet,{hp:15,speed:3},this.gameMap, (object1,object2) => {return this.isColiding(object1,object2);}));
+            this.enemies.push(new Enemie(this.level.enemySpawnLocation[i].x,this.level.enemySpawnLocation[i].y,this.enemyTextureSheets[0],{hp:15,speed:3},this.gameMap, (object1,object2) => {return this.isColiding(object1,object2);}));
             this.app.stage.addChild(this.enemies[i]);
         }
 
@@ -674,13 +680,18 @@ class Game{
         }
     }
 
+    /**
+     * Main game loop. 
+     */
     gameLoop(){
+        //Check for Esc-Key
         if(this.pressedKeys["27"]){
             this.pauseGame("pause");
         }
-
+        //Moves the player
         this.player.move(this.pressedKeys,this.gameMap);
        
+        //Check for shooting and reloading
         if(this.pointerdown && this.amonition > 0 && this.cnt % 10 == 0 && !this.isReloading){
             this.shoot();
         }
@@ -689,6 +700,7 @@ class Game{
             this.reload();
         }
 
+        //Updates all bullets on screen
         if(this.bullets.length > 0){
             for(var i = 0; i < this.bullets.length; i++){
                 let tmp = this.bullets[i].updateBullet(this.enemies,this.gameMap);
@@ -714,6 +726,7 @@ class Game{
             }
         }
         
+        //Updates all enemies on screen
         if(this.enemies.length > 0){
            for(var i = 0; i < this.enemies.length; i++){
                 if(this.enemies[i].updateEnemy(this.player)){
@@ -722,13 +735,17 @@ class Game{
             } 
         }
         
+        //Updates for UI
+        //Updates the Next-Wave-Progressbar
         this.UI.children[4].texture = this.progressBarFrames[Math.round(((300 - (this.cnt % 300)) / 100))];
         if(this.cnt % 300 == 0 && this.cnt != 0 && this.enemies.length < 50){
             for(var i = 0; i < this.level.enemyCount; i++){
-                this.enemies.push(new Enemie(this.level.enemySpawnLocation[i].x,this.level.enemySpawnLocation[i].y,this.enemyTextureSheet,{hp:15,speed:3},this.gameMap,(object1,object2) => {return this.isColiding(object1,object2);}));
+                let level = Math.round(Math.random());
+                this.enemies.push(new Enemie(this.level.enemySpawnLocation[i].x,this.level.enemySpawnLocation[i].y,this.enemyTextureSheets[level],{hp:15 + 5 * level,speed:3 + level},this.gameMap,(object1,object2) => {return this.isColiding(object1,object2);}));
                 this.app.stage.addChild(this.enemies[this.enemies.length - 1]);
             }
         }
+        //Updates the score
         this.UI.children[5].text = "Score: " + this.score;
         if(this.score >= 100){
             this.UI.children[5].width = 200;
@@ -736,6 +753,7 @@ class Game{
         if(this.score >= 1000){
             this.UI.children[5].width = 250;
         }
+        //Updates the FPS display
         document.getElementById("FPS").innerHTML = "FPS: " + Math.round(this.app.ticker.FPS);
         this.cnt++;
     }

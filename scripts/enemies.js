@@ -17,7 +17,7 @@ class EnemyTexture extends PIXI.AnimatedSprite{
             if(direction == "up"){
                 this.textures = this.textureSheet.walkLeft;
                 this.loop = false;
-                this.play();
+                this.play();  
             }
             else if(direction == "down"){
                 this.textures = this.textureSheet.walkRight;
@@ -88,7 +88,6 @@ class Graph{
 class Enemie extends PIXI.Container{
     constructor(posX,posY,textureSheet,enemyStats,map,collisionFkt){
         super()
-        this.textureSheet = textureSheet;
         this.x = posX;
         this.y = posY;
         this.stats = enemyStats;
@@ -104,7 +103,7 @@ class Enemie extends PIXI.Container{
         this.texture;
         this.hpBar;
 
-        this.texture = new EnemyTexture(this.textureSheet);
+        this.texture = new EnemyTexture(textureSheet);
         this.addChild(this.texture);
         
         this.hpBar = new HPBar(this.stats.hp);

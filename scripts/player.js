@@ -8,7 +8,7 @@ class Player extends PIXI.AnimatedSprite{
         this.x = posX;
         this.y = posY;
         this.zIndex = 4;
-        this.speed = 5
+        this.stats = {speed: 5, shootingSpeed: 10};
         this.colFkt = collisionFkt;
         this.hitBox = "rectangular";
         this.play();
@@ -27,9 +27,8 @@ class Player extends PIXI.AnimatedSprite{
         let leftTile = tile - 1;
         //Moving Up
         if(pressedKeys["87"]){
-            this.y -= this.speed;
+            this.y -= this.stats.speed;
             this.playWalkAnimation("up");
-            this.y -= this.speed;
             for(i = 0; i < 3; i++){
                 if(map.children[upLeftTile+i].isSolid){
                     if(this.colFkt(map.children[upLeftTile+i],this)){
@@ -54,7 +53,7 @@ class Player extends PIXI.AnimatedSprite{
         }
         //Moving Down
         if(pressedKeys["83"]){
-            this.y += this.speed;
+            this.y += this.stats.speed;
             this.playWalkAnimation("down");
             for(i = 0; i < 3; i++){
                 if(map.children[upLeftTile+i].isSolid){
@@ -80,7 +79,7 @@ class Player extends PIXI.AnimatedSprite{
         }
         //Moving Right
         if(pressedKeys["68"]){
-            this.x += this.speed;
+            this.x += this.stats.speed;
             this.playWalkAnimation("right");
             for(i = 0; i < 3; i++){
                 if(map.children[upLeftTile+i].isSolid){
@@ -106,7 +105,7 @@ class Player extends PIXI.AnimatedSprite{
         }
         //Moving Left
         if(pressedKeys["65"]){
-            this.x -= this.speed;
+            this.x -= this.stats.speed;
             this.playWalkAnimation("left");
             for(i = 0; i < 3; i++){
                 if(map.children[upLeftTile+i].isSolid){
