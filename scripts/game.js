@@ -8,6 +8,7 @@ LevelSelectScreen: 996
 
 UI: 100
 
+Items. 5
 Player: 4
 Enemies: 3
 Bullets: 2
@@ -41,9 +42,11 @@ class Game{
         this.gameMap = new PIXI.Container();
         this.enemies = [];
         this.bullets = [];
+        this.items = [];
         this.player;
         //texture Sheets
         this.progressBarFrames = [];
+        this.itemTexures = [];
         this.enemyTextureSheets = [];
         this.playerTextureSheet = {};
 
@@ -124,6 +127,7 @@ class Game{
                        .add("l-7","levels/level-7.png")
                        .add("l-8","levels/level-8.png")
                        .add("l-9","levels/level-9.png")
+                       .add("item-bolt","items/bolt.png")
                        .add("tiles","mapTiles.png");
         this.app.loader.onComplete.add(function(){that.creatingCombinedGraphics()})
         this.app.loader.load();
@@ -478,7 +482,9 @@ class Game{
      * Creates the Texture sheets for the animations
      */
     createTextureSheets(){
-        //Enemy Texture Sheet
+        //Item textures
+        this.itemTexures.push(this.app.loader.resources["item-bolt"].texture);
+        //Enemy Texture Sheets
         {
             let maxLevel = 1;
             for(let level = 0; level <= maxLevel; level++){
@@ -633,6 +639,7 @@ class Game{
                    rec1.contains(rec2.x + rec2.width, rec2.y + rec2.height);
         }
         else{
+            console.log("Huston, we have a problem")
             return false;
         }
     }
@@ -644,6 +651,9 @@ class Game{
         var i = 0;
         for(i = 0; i < this.enemies.length; i++){
             this.enemies[i].destroy();
+        }
+        for(i = 0; i < this.items.length; i++){
+            this.items[i].destroy();
         }
         for(i = 0; i < this.bullets.length; i++){
             this.bullets[i].destroy();
@@ -657,6 +667,7 @@ class Game{
         this.UI.visible = false;
         this.enemies = [];
         this.bullets = [];
+        this.items = [];
         this.isReloading = false;
         this.UI.children[2].text = this.amonition + "/50";
         this.gameMap = new PIXI.Container();
@@ -680,6 +691,21 @@ class Game{
         }
     }
 
+    getRandomNonWallPosition(){
+        let pos = {};
+        while(1){
+            pos.x = Math.round(Math.random() * 29);
+            pos.y = Math.round(Math.random() * 19);
+            let index = pos.y * 30 + pos.x;
+            if(!this.gameMap.children[index].isSolid){
+                break;
+            }
+        }
+        pos.x = pos.x*30+15;
+        pos.y = pos.y*30+15;
+        return pos;
+    }
+
     /**
      * Main game loop. 
      */
@@ -689,10 +715,28 @@ class Game{
             this.pauseGame("pause");
         }
         //Moves the player
-        this.player.move(this.pressedKeys,this.gameMap);
+        this.items = this.player.move(this.pressedKeys,this.gameMap,this.items);
+        //UpdatesItems
+        for(var i = 0; i < this.items.length; i++){
+            if(this.items[i].status == "forDeletion"){
+                this.items[i].destroy();
+                this.app.stage.removeChild(this.items[i]);
+                this.items.splice(i,1);
+            }
+            else{
+                this.items[i].update();
+            }
+        }
        
+        //Spawns random item
+        if(this.cnt % 50 == 0){
+            let pos = this.getRandomNonWallPosition();
+            this.items.push(new Item(pos.x,pos.y,this.itemTexures,0));
+            this.app.stage.addChild(this.items[this.items.length-1])
+        }
+
         //Check for shooting and reloading
-        if(this.pointerdown && this.amonition > 0 && this.cnt % 10 == 0 && !this.isReloading){
+        if(this.pointerdown && this.amonition > 0 && this.cnt % this.player.stats.shootingSpeed == 0 && !this.isReloading){
             this.shoot();
         }
 

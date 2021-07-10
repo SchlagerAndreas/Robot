@@ -367,7 +367,7 @@
 
     {
         "level" : "level9",
-        "enemyCount" : 4,
+        "enemyCount" : 0,
         "enemySpawnLocation" : [
             {"x" : 45, "y" : 45},
             {"x" : 45, "y" : 555},

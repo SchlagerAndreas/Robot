@@ -9,6 +9,7 @@ class Player extends PIXI.AnimatedSprite{
         this.y = posY;
         this.zIndex = 4;
         this.stats = {speed: 5, shootingSpeed: 10};
+        this.numOfUsedItems = 0;
         this.colFkt = collisionFkt;
         this.hitBox = "rectangular";
         this.play();
@@ -19,12 +20,13 @@ class Player extends PIXI.AnimatedSprite{
      * @param {Object} pressedKeys The keys which are pressed
      * @param {PIXI.Container} map The map
      */
-    move(pressedKeys,map){
+    move(pressedKeys,map,items){
         var i = 0;
         let tile = this.getTile(this.x,this.y);
         let upLeftTile = tile - 30 - 1;
         let downLeftTile = tile + 30 - 1;
         let leftTile = tile - 1;
+
         //Moving Up
         if(pressedKeys["87"]){
             this.y -= this.stats.speed;
@@ -119,7 +121,7 @@ class Player extends PIXI.AnimatedSprite{
                     if(this.colFkt(map.children[downLeftTile+i],this)){
                         this.x = map.children[downLeftTile+i].x + 28;
                     }
-                }
+                }  
             }
             for(i = 0; i < 3; i++){
                 if(map.children[leftTile+i].isSolid){
@@ -129,6 +131,37 @@ class Player extends PIXI.AnimatedSprite{
                 }
             }
         }
+
+        for(i = 0; i < items.length; i++){
+            if(items[i].status == "usedUp"){
+                for(const statChange in items[i].statChanges){
+                    this.stats[statChange] -= items[i].statChanges[statChange];
+                }
+                items[i].status = "forDeletion";
+            }
+            else if(items[i].status == "forUse"){
+                if(this.colFkt(items[i],this)){
+                    console.log("Hit item");
+                    let alreadyUsed = false;
+                    for(var j = 0; j < items.length; j++){
+                        if(items[j].status == "inUse" && items[i].id == items[j].id){
+                            items[i].status = "forDeletion";
+                            items[j].counter = 1000;
+                            alreadyUsed = true;
+                            break;
+                        }
+                    }
+                    if(!alreadyUsed){
+                        items[i].useItem(this.numOfUsedItems);
+                        for(const statChange in items[i].statChanges){
+                            this.stats[statChange] += items[i].statChanges[statChange];
+                        }
+                        this.numOfUsedItems++;
+                    }
+                }
+            }  
+        }
+        return items;
     }
 
     /**
