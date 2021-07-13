@@ -16,8 +16,9 @@ class Item extends PIXI.Container{
 
         this.statChanges;
         switch(id){
-            case 0: this.statChanges = {speed:2,shootingSpeed:0,damageIncrease:0};this.colorCode = 0xFFFF00;break;
-            default: this.statChanges = {speed:0,shootingSpeed:0,damageIncrease:0};break;
+            case 0: this.statChanges = {speed:2};this.colorCode = 0xFFFF00;break;
+            case 1: this.statChanges = {shootingSpeed:-5};this.colorCode = 0x00FF00;break;
+            default: this.statChanges = {speed:0,shootingSpeed:0,damage:0};this.status = "forDeletion"; break;
         }
     }
 
@@ -37,10 +38,18 @@ class Item extends PIXI.Container{
         }
     }
 
-    useItem(numberOfUsedItems){
+    useItem(numberOfUsedItems,items){
+        for(let i = 0; i < items.length;i++){
+            if(items[i].status == "inUse" && items[i].x == 900-20-20*numberOfUsedItems){
+                this.x = 900-20-20*(numberOfUsedItems-1);
+                break;
+            }
+            else{
+                this.x = 900-20-20*numberOfUsedItems;
+            }
+        }
         this.status = "inUse";
         this.children[0].destroy();
-        this.x = 900-20-20*numberOfUsedItems;
         this.y = 20;
         let circle = new PIXI.Graphics();
         circle.beginFill(this.colorCode);

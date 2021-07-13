@@ -138,6 +138,7 @@ class Player extends PIXI.AnimatedSprite{
                     this.stats[statChange] -= items[i].statChanges[statChange];
                 }
                 items[i].status = "forDeletion";
+                this.numOfUsedItems--;
             }
             else if(items[i].status == "forUse"){
                 if(this.colFkt(items[i],this)){
@@ -152,7 +153,7 @@ class Player extends PIXI.AnimatedSprite{
                         }
                     }
                     if(!alreadyUsed){
-                        items[i].useItem(this.numOfUsedItems);
+                        items[i].useItem(this.numOfUsedItems,items);
                         for(const statChange in items[i].statChanges){
                             this.stats[statChange] += items[i].statChanges[statChange];
                         }

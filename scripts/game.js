@@ -63,7 +63,7 @@ class Game{
 
     keysDown(e){
         this.pressedKeys[e.keyCode] = true;
-    }
+    }       
     
     keysUp(e){
         this.pressedKeys[e.keyCode] = false;
@@ -128,6 +128,7 @@ class Game{
                        .add("l-8","levels/level-8.png")
                        .add("l-9","levels/level-9.png")
                        .add("item-bolt","items/bolt.png")
+                       .add("item-green","items/green.png")
                        .add("tiles","mapTiles.png");
         this.app.loader.onComplete.add(function(){that.creatingCombinedGraphics()})
         this.app.loader.load();
@@ -484,6 +485,7 @@ class Game{
     createTextureSheets(){
         //Item textures
         this.itemTexures.push(this.app.loader.resources["item-bolt"].texture);
+        this.itemTexures.push(this.app.loader.resources["item-green"].texture);
         //Enemy Texture Sheets
         {
             let maxLevel = 1;
@@ -701,8 +703,8 @@ class Game{
                 break;
             }
         }
-        pos.x = pos.x*30+15;
-        pos.y = pos.y*30+15;
+        pos.x = pos.x*30+10;
+        pos.y = pos.y*30+10;
         return pos;
     }
 
@@ -731,7 +733,8 @@ class Game{
         //Spawns random item
         if(this.cnt % 50 == 0){
             let pos = this.getRandomNonWallPosition();
-            this.items.push(new Item(pos.x,pos.y,this.itemTexures,0));
+            let id = Math.round(Math.random()*1);
+            this.items.push(new Item(pos.x,pos.y,this.itemTexures,id));
             this.app.stage.addChild(this.items[this.items.length-1])
         }
 
