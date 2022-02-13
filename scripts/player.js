@@ -8,7 +8,7 @@ class Player extends PIXI.AnimatedSprite{
         this.x = posX;
         this.y = posY;
         this.zIndex = 4;
-        this.stats = {speed: 5, shootingSpeed: 10};
+        this.stats = {speed: 5, shootingSpeed: 10, damage:5};
         this.numOfUsedItems = 0;
         this.colFkt = collisionFkt;
         this.hitBox = "rectangular";
@@ -141,7 +141,7 @@ class Player extends PIXI.AnimatedSprite{
                 this.numOfUsedItems--;
             }
             else if(items[i].status == "forUse"){
-                if(this.colFkt(items[i],this)){
+                if(this.colFkt(this,items[i])){
                     console.log("Hit item");
                     let alreadyUsed = false;
                     for(var j = 0; j < items.length; j++){

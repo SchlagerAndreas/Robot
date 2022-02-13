@@ -18,6 +18,7 @@ class Item extends PIXI.Container{
         switch(id){
             case 0: this.statChanges = {speed:2};this.colorCode = 0xFFFF00;break;
             case 1: this.statChanges = {shootingSpeed:-5};this.colorCode = 0x00FF00;break;
+            case 2: this.statChanges = {damage:2};this.colorCode = 0xFF0000;break;
             default: this.statChanges = {speed:0,shootingSpeed:0,damage:0};this.status = "forDeletion"; break;
         }
     }
@@ -50,7 +51,7 @@ class Item extends PIXI.Container{
         }
         this.status = "inUse";
         this.children[0].destroy();
-        this.y = 20;
+        this.y = 10;
         let circle = new PIXI.Graphics();
         circle.beginFill(this.colorCode);
         circle.drawCircle(0,0,10);

@@ -129,6 +129,7 @@ class Game{
                        .add("l-9","levels/level-9.png")
                        .add("item-bolt","items/bolt.png")
                        .add("item-green","items/green.png")
+                       .add("item-flame","items/flame.png")
                        .add("tiles","mapTiles.png");
         this.app.loader.onComplete.add(function(){that.creatingCombinedGraphics()})
         this.app.loader.load();
@@ -486,6 +487,7 @@ class Game{
         //Item textures
         this.itemTexures.push(this.app.loader.resources["item-bolt"].texture);
         this.itemTexures.push(this.app.loader.resources["item-green"].texture);
+        this.itemTexures.push(this.app.loader.resources["item-flame"].texture)
         //Enemy Texture Sheets
         {
             let maxLevel = 1;
@@ -731,11 +733,11 @@ class Game{
         }
        
         //Spawns random item
-        if(this.cnt % 50 == 0){
+        if(this.cnt % 50 == 0 && this.items.length < 10 + this.player.numOfUsedItems){
             let pos = this.getRandomNonWallPosition();
-            let id = Math.round(Math.random()*1);
+            let id = Math.round(Math.random()*2);
             this.items.push(new Item(pos.x,pos.y,this.itemTexures,id));
-            this.app.stage.addChild(this.items[this.items.length-1])
+            this.app.stage.addChild(this.items[this.items.length-1]);
         }
 
         //Check for shooting and reloading
@@ -758,7 +760,7 @@ class Game{
                         this.bullets.splice(i,1);
                     }
                     else if(tmp[1] == "e"){
-                        let dmg = this.bullets[i].damage;
+                        let dmg = this.player.stats.damage;
                         this.bullets[i].destroy();
                         this.app.stage.removeChild(this.bullets[i]);
                         this.bullets.splice(i,1);
